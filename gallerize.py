@@ -96,6 +96,8 @@ class Gallery(object):
     def generate(self):
         # Create destination path if it doesn't exist.
         if not os.path.exists(self.destination_path):
+            debug('Destination path "%s" does not exist, creating it.'
+                % self.destination_path)
             os.mkdir(self.destination_path)
 
         self.generate_images()
@@ -132,6 +134,11 @@ class Gallery(object):
         render_html_to_file('index', context, self.destination_path, 'index')
 
     def copy_additional_static_files(self):
+        if not os.path.exists(PATH_STATIC):
+            debug('Path "%s", does not exist; not copying any static files.'
+                % PATH_STATIC)
+            return
+
         filenames = list(sorted(os.listdir(PATH_STATIC)))
         if not filenames:
             debug('No static files to copy.')
