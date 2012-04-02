@@ -1,0 +1,159 @@
+{%- macro box_shadow(value) -%}
+  -moz-box-shadow: {{ value }};
+  -webkit-box-shadow: {{ value }};
+  box-shadow: {{ value }};
+{%- endmacro %}
+
+{%- macro transition(property, duration, timing_function) -%}
+  -moz-transition-property: {{ property }};
+  -moz-transition-duration: {{ duration }};
+  -moz-transition-timing-function: {{ timing_function }};
+  {#- Note: Chrome still does not support CSS3 transitions on pseudo elements as of February 2012. #}
+  -webkit-transition-property: {{ property }};
+  -webkit-transition-duration: {{ duration }};
+  -webkit-transition-timing-function: {{ timing_function }};
+{%- endmacro %}
+
+{%- set thumbnail_hover_duration = '200ms' -%}
+
+body {
+  background-color: #dddddd;
+  color: #333333;
+  font-family: "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
+  font-size: 100%;
+  margin: 10px 40px;
+  text-align: center;
+  text-shadow: 0 1px 1px #ffffff;
+}
+
+figure,
+figcaption,
+footer,
+header,
+nav {
+  display: block;
+}
+
+a {
+  color: #333333;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+header {
+  margin: 2em 0;
+  text-align: left;
+}
+header h1,
+header p {
+  font-family: Cambria, Georgia, "New Century Schoolbook", "Century Schoolbook L", "Times New Roman", serif;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+header p {
+  opacity: 0.5;
+}
+
+nav {
+  margin: 1em;
+  opacity: 0.5;
+}
+nav:hover {
+  opacity: 1;
+}
+nav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+nav ol li {
+  display: inline-block;
+  margin: 0 0.5em;
+  padding: 0;
+}
+nav a[accesskey]:before {
+  background-color: #cccccc;
+  border: #aaaaaa outset 2px;
+  content: attr(accesskey);
+  font-family: monospace;
+  font-size: 0.9em;
+  margin-right: .5em;
+  padding: 0 0.3em;
+  text-transform: uppercase;
+}
+nav a[accesskey] {
+  text-decoration: none;
+}
+nav a[accesskey]:hover span {
+  text-decoration: underline;
+}
+
+ol.thumbnails {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ol.thumbnails li {
+  float: left;
+  margin: 0 8px 16px 8px;
+  padding: 0;
+}
+
+figure {
+  height: 100%;
+  margin: 0 auto;
+  width: 100%;
+}
+figure a {
+  display: block;
+  position: relative;
+}
+figure a:before {
+  background-color: #000000;
+  content: "";
+  display: block;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  {{ transition('opacity', thumbnail_hover_duration, 'ease-in') }}
+  width: 100%;
+  z-index: 2;
+}
+figure a:hover:before {
+  display: block;
+  opacity: 0.5;
+}
+figure img {
+  border: #cccccc solid 2px;
+  {{ box_shadow('3px 3px 4px #333333') }}
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  {{ transition('border-color', thumbnail_hover_duration, 'ease-out') }}
+  z-index: 1;
+}
+figure a:hover img {
+  border-color: #888888;
+  {{ transition('border-color', thumbnail_hover_duration, 'ease-in') }}
+}
+figcaption {
+  margin-top: 0.75em;
+  text-align: left;
+}
+
+footer {
+  clear: both;
+  font-size: 0.8em;
+  margin-top: 2em;
+  opacity: 0.5;
+  text-align: right;
+}
+footer:hover {
+  opacity: 1;
+}

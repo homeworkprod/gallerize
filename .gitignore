@@ -1,0 +1,6 @@
+# Ignore the virtual environment.
+env/*
+
+# Ignore Python bytecode.
+*.pyc
+*.pyo

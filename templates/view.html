@@ -1,0 +1,40 @@
+{% extends "_layout.html" %}
+{% block head_additions %}
+    <link rel="up" href="{{ url_for_page('index') }}"/>
+    {%- if image.previous_image %}
+    <link rel="prev" href="{{ url_for_page(image.previous_image.page_name) }}"/>
+    {%- endif %}
+    {%- if image.next_image %}
+    <link rel="next" href="{{ url_for_page(image.next_image.page_name) }}"/>
+    {%- endif %}
+{%- endblock head_additions %}
+{% set gallery_title = image.gallery.title %}
+{% block body %}
+
+    <header>
+      {% if image.gallery.title is not none %}
+      <p>{{ image.gallery.title }}</p>
+      {% endif %}
+      <h1>{{ image.filename }}</h1>
+    </header>
+
+    <nav>
+      <ol>
+        {%- if image.previous_image %}
+        <li>&larr; <a href="{{ url_for_page(image.previous_image.page_name) }}" accesskey="a"><span>previous</span></a></li>
+        {%- endif %}
+        <li>&uarr; <a href="{{ url_for_page('index') }}" accesskey="w">Index</a></li>
+        {%- if image.next_image %}
+        <li><a href="{{ url_for_page(image.next_image.page_name) }}" accesskey="d"><span>next</span></a> &rarr;</li>
+        {%- endif %}
+      </ol>
+    </nav>
+
+    <figure>
+      <img src="{{ image.filename }}"/>
+      {%- if image.caption %}
+      <figcaption>{{ image.caption }}</figcaption>
+      {%- endif %}
+    </figure>
+
+{%- endblock body %}
