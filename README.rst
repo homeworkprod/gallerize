@@ -34,21 +34,29 @@ Installation
 It is recommended to create a virtual environment and run gallerize
 inside it.
 
-To install ImageMagick_ and virtualenv_ on Debian/Ubuntu::
+To install ImageMagick_ and virtualenv_ on Debian/Ubuntu:
+
+.. code:: sh
 
   $ aptitude install imagemagick python-virtualenv
 
 This should also give you a copy of pip_.
 
-Create a virtual environment called `env` in the application path::
+Create a virtual environment called `env` in the application path:
+
+.. code:: sh
 
   $ virtualenv env
 
-Activate it (note the space after the first dot!)::
+Activate it (note the space after the first dot!):
+
+.. code:: sh
 
   $ . env/bin/activate
 
-Install the dependencies of this application::
+Install the dependencies of this application:
+
+.. code:: sh
 
   $ pip install -r requirements.txt
 
@@ -56,11 +64,15 @@ Install the dependencies of this application::
 Tests
 =====
 
-Install py.test_ as test runner::
+Install py.test_ as test runner:
+
+.. code:: sh
 
   $ pip install pytest
 
-Run tests::
+Run tests:
+
+.. code:: sh
 
   $ py.test gallerize_test.py
 
