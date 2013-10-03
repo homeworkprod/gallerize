@@ -1,6 +1,8 @@
-# Ignore the virtual environment.
-env/*
+# Python bytecode
+*.py[co]
 
-# Ignore Python bytecode.
-*.pyc
-*.pyo
+# virtual environment
+venv
+
+# tox' local data
+.tox
