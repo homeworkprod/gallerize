@@ -13,10 +13,15 @@ See README for details.
 :License: MIT, see LICENSE for details.
 """
 
+from __future__ import print_function
 import argparse
 import codecs
 from collections import defaultdict, namedtuple
 import copy
+try:
+    from future_builtins import filter, map  # Python 2.6+
+except ImportError:
+    pass  # Python 3+
 from itertools import islice
 import os
 import shutil
@@ -42,7 +47,7 @@ TEMPLATE_ENVIRONMENT = Environment(
 
 
 def debug(msg):
-    print msg
+    print(msg)
 
 def resize_image(src_filename, dst_filename, max_dimension):
     """Create a resized (and antialiased) version of an image."""
@@ -228,7 +233,7 @@ def parse_args():
         """Validate a dimension value."""
         try:
             return Dimension(*map(int, value.split('x', 1)))
-        except ValueError, e:
+        except ValueError as e:
             raise argparse.ArgumentTypeError(
                 'invalid dimension value: %r' % value)
 
@@ -275,13 +280,13 @@ def parse_args():
     return parser.parse_args()
 
 def handle_duplicate_filenames(paths):
-    duplicates = find_duplicate_filenames(paths)
+    duplicates = list(find_duplicate_filenames(paths))
     if duplicates:
-        print 'Found duplicate filenames:'
+        print('Found duplicate filenames:')
         for filename, paths in duplicates:
-            print '  + "%s" appears in the following paths:' % filename
+            print('  + "%s" appears in the following paths:' % filename)
             for path in paths:
-                print '    - ' + path
+                print('    - ' + path)
         sys.exit('Clashing target filenames, aborting.')
 
 def find_duplicate_filenames(paths):
@@ -290,7 +295,7 @@ def find_duplicate_filenames(paths):
         key = os.path.basename(path).lower()
         d[key].append(path)
 
-    return filter(lambda x: len(x[1]) > 1, d.iteritems())
+    return filter(lambda x: len(x[1]) > 1, d.items())
 
 
 if __name__ == '__main__':
