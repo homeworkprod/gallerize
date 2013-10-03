@@ -50,5 +50,5 @@ def test_window(iterable, n, expected):
     ),
 ])
 def test_find_duplicate_filenames(paths, expected):
-    actual = gallerize.find_duplicate_filenames(paths)
+    actual = list(gallerize.find_duplicate_filenames(paths))
     assert actual == expected
