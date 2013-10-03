@@ -5,10 +5,10 @@ gallerize
 Create a static HTML/CSS image gallery from a bunch of images.
 
 
-:Copyright: 2007-2012 Jochen Kupperschmidt
+:Copyright: 2007-2013 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
-:Version: 0.3
-:Date: 02-Apr-2012
+:Version: 0.3.1
+:Date: 03-Oct-2013
 
 
 Features
