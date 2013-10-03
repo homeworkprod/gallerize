@@ -74,7 +74,7 @@ Run tests:
 
 .. code:: sh
 
-  $ py.test gallerize_test.py
+  $ py.test test_gallerize.py
 
 
 .. _Python: http://www.python.org/
