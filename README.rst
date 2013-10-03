@@ -23,8 +23,8 @@ Features
 Requirements
 ============
 
-- Python_ 2.7 or greater
-- Jinja_ 2.6 or greater
+- Python_ 2.7+ or 3.3+
+- Jinja_ (tested with 2.7.1)
 - ImageMagick_ (tested with 6.6.9-7)
 
 
