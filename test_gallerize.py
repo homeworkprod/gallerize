@@ -6,7 +6,7 @@ gallerize tests
 
 See README for details.
 
-:Copyright: 2007-2012 Jochen Kupperschmidt
+:Copyright: 2007-2013 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 
