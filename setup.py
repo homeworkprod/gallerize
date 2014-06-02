@@ -10,10 +10,4 @@ setup(
     author='Jochen Kupperschmidt',
     author_email='homework@nwsnet.de',
     url='http://homework.nwsnet.de/releases/cc0e/#gallerize',
-    install_requires=[
-        'jinja2 >= 2.7.1',
-    ],
-    test_requires=[
-        'pytest >= 2.4.1',
-    ],
 )
