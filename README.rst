@@ -42,17 +42,17 @@ To install ImageMagick_ and virtualenv_ on Debian/Ubuntu:
 
 This should also give you a copy of pip_.
 
-Create a virtual environment called `env` in the application path:
+Create a virtual environment called `venv` in the application path:
 
 .. code:: sh
 
-  $ virtualenv env
+  $ virtualenv venv
 
 Activate it (note the space after the first dot!):
 
 .. code:: sh
 
-  $ . env/bin/activate
+  $ . venv/bin/activate
 
 Install the dependencies of this application:
 
