@@ -12,7 +12,7 @@ See README for details.
 
 import pytest
 
-from gallerize import find_duplicate_filenames, window
+from gallerize import find_duplicate_filenames, parse_dimension_arg, window
 
 
 parametrize = pytest.mark.parametrize
@@ -34,6 +34,7 @@ def test_window(iterable, n, expected):
     actual = list(window(iterable, n))
     assert actual == expected
 
+
 @parametrize(('paths', 'expected'), [
     (
         ['dir1/foo.txt', 'dir1/bar.txt', 'foo.txt', 'dir2/Foo.tXt'],
@@ -52,3 +53,14 @@ def test_window(iterable, n, expected):
 def test_find_duplicate_filenames(paths, expected):
     actual = dict(find_duplicate_filenames(paths))
     assert actual == expected
+
+
+@parametrize(('arg_value', 'expected_width', 'expected_height'), [
+    ('480x640',   480, 640),
+    ('1280x960', 1280, 960),
+])
+def test_parse_dimension_arg(arg_value, expected_width, expected_height):
+    actual = parse_dimension_arg(arg_value)
+
+    assert actual.width == expected_width
+    assert actual.height == expected_height
