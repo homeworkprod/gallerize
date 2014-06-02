@@ -224,18 +224,22 @@ class Image(object):
             self.page_name)
 
 
+# -------------------------------------------------------------------- #
+# command line argument parsing
+
+
+Dimension = namedtuple('Dimension', ['width', 'height'])
+
+def parse_dimension_arg(value):
+    """Validate a dimension value."""
+    try:
+        return Dimension(*map(int, value.split('x', 1)))
+    except ValueError as e:
+        raise argparse.ArgumentTypeError(
+            'invalid dimension value: %r' % value)
+
 def parse_args():
     """Parse command-line arguments."""
-
-    Dimension = namedtuple('Dimension', ['width', 'height'])
-
-    def dimension(value):
-        """Validate a dimension value."""
-        try:
-            return Dimension(*map(int, value.split('x', 1)))
-        except ValueError as e:
-            raise argparse.ArgumentTypeError(
-                'invalid dimension value: %r' % value)
 
     parser = argparse.ArgumentParser(
         usage='%(prog)s [options] <target path> <image> [image] ...')
@@ -279,6 +283,10 @@ def parse_args():
 
     return parser.parse_args()
 
+
+# -------------------------------------------------------------------- #
+
+
 def handle_duplicate_filenames(paths):
     duplicates = list(find_duplicate_filenames(paths))
     if duplicates:
@@ -296,6 +304,9 @@ def find_duplicate_filenames(paths):
         d[key].append(path)
 
     return filter(lambda x: len(x[1]) > 1, d.items())
+
+
+# -------------------------------------------------------------------- #
 
 
 if __name__ == '__main__':
