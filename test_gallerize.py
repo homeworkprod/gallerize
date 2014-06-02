@@ -6,7 +6,7 @@ gallerize tests
 
 See README for details.
 
-:Copyright: 2007-2013 Jochen Kupperschmidt
+:Copyright: 2007-2014 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 
@@ -37,18 +37,18 @@ def test_window(iterable, n, expected):
 @parametrize(('paths', 'expected'), [
     (
         ['dir1/foo.txt', 'dir1/bar.txt', 'foo.txt', 'dir2/Foo.tXt'],
-        [
-            ('foo.txt', ['dir1/foo.txt', 'foo.txt', 'dir2/Foo.tXt']),
-        ]
+        {
+            'foo.txt': ['dir1/foo.txt', 'foo.txt', 'dir2/Foo.tXt'],
+        }
     ),
     (
         ['xy/one.jpg', 'xy/two.jpg', 'xy/three.jpg', 'one.jpg', 'three.jpg'],
-        [
-            ('one.jpg', ['xy/one.jpg', 'one.jpg']),
-            ('three.jpg', ['xy/three.jpg', 'three.jpg']),
-        ]
+        {
+            'one.jpg': ['xy/one.jpg', 'one.jpg'],
+            'three.jpg': ['xy/three.jpg', 'three.jpg'],
+        }
     ),
 ])
 def test_find_duplicate_filenames(paths, expected):
-    actual = list(gallerize.find_duplicate_filenames(paths))
+    actual = dict(gallerize.find_duplicate_filenames(paths))
     assert actual == expected
