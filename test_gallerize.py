@@ -12,7 +12,7 @@ See README for details.
 
 import pytest
 
-import gallerize
+from gallerize import find_duplicate_filenames, window
 
 
 parametrize = pytest.mark.parametrize
@@ -31,7 +31,7 @@ parametrize = pytest.mark.parametrize
     ),
 ])
 def test_window(iterable, n, expected):
-    actual = list(gallerize.window(iterable, n))
+    actual = list(window(iterable, n))
     assert actual == expected
 
 @parametrize(('paths', 'expected'), [
@@ -50,5 +50,5 @@ def test_window(iterable, n, expected):
     ),
 ])
 def test_find_duplicate_filenames(paths, expected):
-    actual = dict(gallerize.find_duplicate_filenames(paths))
+    actual = dict(find_duplicate_filenames(paths))
     assert actual == expected
