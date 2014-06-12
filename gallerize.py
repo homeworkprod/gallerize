@@ -17,7 +17,6 @@ from __future__ import print_function
 import argparse
 import codecs
 from collections import defaultdict, namedtuple
-import copy
 try:
     from future_builtins import filter, map  # Python 2.6+
 except ImportError:
