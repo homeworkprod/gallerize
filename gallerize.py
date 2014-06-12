@@ -51,7 +51,7 @@ def debug(msg):
 def resize_image(src_filename, dst_filename, max_dimension):
     """Create a resized (and antialiased) version of an image."""
     dimension_str = '%dx%d' % (max_dimension.width, max_dimension.height)
-    cmd =['convert', '-resize', dimension_str, src_filename, dst_filename]
+    cmd = ['convert', '-resize', dimension_str, src_filename, dst_filename]
     subprocess.check_call(cmd)
 
 def render_html_to_file(template_name, context, path, page_name):
@@ -233,7 +233,7 @@ def parse_dimension_arg(value):
     """Validate a dimension value."""
     try:
         return Dimension(*map(int, value.split('x', 1)))
-    except ValueError as e:
+    except ValueError:
         raise argparse.ArgumentTypeError(
             'invalid dimension value: %r' % value)
 
