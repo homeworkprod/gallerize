@@ -80,7 +80,7 @@ class Gallery(object):
         gallery = Gallery()
 
         gallery.images = [Image(gallery, image)
-            for image in sorted(args.full_image_filenames)]
+                          for image in sorted(args.full_image_filenames)]
         gallery.link_images()
         gallery.title = args.title
         gallery.destination_path = args.destination_path
@@ -101,7 +101,7 @@ class Gallery(object):
         # Create destination path if it doesn't exist.
         if not os.path.exists(self.destination_path):
             debug('Destination path "%s" does not exist, creating it.'
-                % self.destination_path)
+                  % self.destination_path)
             os.mkdir(self.destination_path)
 
         self.generate_images()
@@ -140,7 +140,7 @@ class Gallery(object):
     def copy_additional_static_files(self):
         if not os.path.exists(PATH_STATIC):
             debug('Path "%s", does not exist; not copying any static files.'
-                % PATH_STATIC)
+                  % PATH_STATIC)
             return
 
         filenames = list(sorted(os.listdir(PATH_STATIC)))
@@ -180,11 +180,13 @@ class Image(object):
     def generate_image(self):
         """Create a (optionally resized) copy of an image."""
         destination_filename = os.path.join(self.gallery.destination_path,
-            self.filename)
+                                            self.filename)
         if self.gallery.resize:
             # Resize image.
             debug('Resizing image "%s" ...' % self.full_filename)
-            resize_image(self.full_filename, destination_filename,
+            resize_image(
+                self.full_filename,
+                destination_filename,
                 self.gallery.max_image_size)
         else:
             # Copy image.
@@ -195,13 +197,16 @@ class Image(object):
         """Create a preview of an image."""
         debug('Creating thumbnail "%s" ...' % self.thumbnail_filename)
         destination_filename = os.path.join(self.gallery.destination_path,
-            self.thumbnail_filename)
-        resize_image(self.full_filename, destination_filename,
+                                            self.thumbnail_filename)
+        resize_image(
+            self.full_filename,
+            destination_filename,
             self.gallery.max_thumbnail_size)
 
     def load_caption(self):
         """Load image caption from file."""
-        caption_filename = os.path.join(self.path,
+        caption_filename = os.path.join(
+            self.path,
             self.filename + IMAGE_CAPTION_EXTENSION)
         self.caption = self._read_first_line(caption_filename)
 
@@ -220,7 +225,7 @@ class Image(object):
             'image': self,
         }
         render_html_to_file('view', context, self.gallery.destination_path,
-            self.page_name)
+                            self.page_name)
 
 
 # -------------------------------------------------------------------- #
@@ -243,33 +248,38 @@ def parse_args():
     parser = argparse.ArgumentParser(
         usage='%(prog)s [options] <target path> <image> [image] ...')
 
-    parser.add_argument('-c', '--captions',
+    parser.add_argument(
+        '-c', '--captions',
         dest='captions',
         action='store_true',
         default=False,
         help='read image captions from text files ("<IMAGE_NAME>.txt")')
 
-    parser.add_argument('--no-resize',
+    parser.add_argument(
+        '--no-resize',
         dest='no_resize',
         action='store_true',
         default=False,
         help='do not resize images, just copy them')
 
-    parser.add_argument('-s', '--size',
+    parser.add_argument(
+        '-s', '--size',
         dest='max_image_size',
         type=Dimension,
         default=ARGS_DEFAULT_MAX_IMAGE_SIZE,
         help='set maximum image size [default: %s]'
-            % ARGS_DEFAULT_MAX_IMAGE_SIZE)
+              % ARGS_DEFAULT_MAX_IMAGE_SIZE)
 
-    parser.add_argument('-t', '--thumbnail-size',
+    parser.add_argument(
+        '-t', '--thumbnail-size',
         dest='max_thumbnail_size',
         type=Dimension,
         default=ARGS_DEFAULT_MAX_THUMBNAIL_SIZE,
         help='set maximum thumbnail size [default: %s]'
-            % ARGS_DEFAULT_MAX_THUMBNAIL_SIZE)
+              % ARGS_DEFAULT_MAX_THUMBNAIL_SIZE)
 
-    parser.add_argument('--title',
+    parser.add_argument(
+        '--title',
         dest='title',
         help='set gallery title on the website')
 
@@ -277,8 +287,7 @@ def parse_args():
     parser.add_argument('destination_path')
 
     # Remaining positional arguments (at least one), as a list.
-    parser.add_argument('full_image_filenames',
-        nargs='+')
+    parser.add_argument('full_image_filenames', nargs='+')
 
     return parser.parse_args()
 
