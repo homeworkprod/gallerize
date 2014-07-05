@@ -45,12 +45,12 @@ TEMPLATE_ENVIRONMENT = Environment(
     trim_blocks=False)
 
 
-def debug(msg):
-    print(msg)
+def debug(message, *args):
+    print(message.format(*args))
 
 def resize_image(src_filename, dst_filename, max_dimension):
     """Create a resized (and antialiased) version of an image."""
-    dimension_str = '%dx%d' % (max_dimension.width, max_dimension.height)
+    dimension_str = '{0.width:d}x{0.height:d}'.format(max_dimension)
     cmd = ['convert', '-resize', dimension_str, src_filename, dst_filename]
     subprocess.check_call(cmd)
 
@@ -69,7 +69,7 @@ def render_template(template_filename, **context):
 
 def write_file(filename, content):
     with codecs.open(filename, 'wb', 'utf-8') as f:
-        debug('Writing "%s" ...' % filename)
+        debug('Writing "{}" ...', filename)
         f.write(content)
 
 
@@ -100,8 +100,8 @@ class Gallery(object):
     def generate(self):
         # Create destination path if it doesn't exist.
         if not os.path.exists(self.destination_path):
-            debug('Destination path "%s" does not exist, creating it.'
-                  % self.destination_path)
+            debug('Destination path "{}" does not exist, creating it.',
+                  self.destination_path)
             os.mkdir(self.destination_path)
 
         self.generate_images()
@@ -139,15 +139,15 @@ class Gallery(object):
 
     def copy_additional_static_files(self):
         if not os.path.exists(PATH_STATIC):
-            debug('Path "%s", does not exist; not copying any static files.'
-                  % PATH_STATIC)
+            debug('Path "{}", does not exist; not copying any static files.',
+                  PATH_STATIC)
             return
 
         filenames = list(sorted(os.listdir(PATH_STATIC)))
         if not filenames:
             debug('No static files to copy.')
         for filename in filenames:
-            debug('Copying static file "%s" ...' % filename)
+            debug('Copying static file "{}" ...', filename)
             shutil.copy(
                 os.path.join(PATH_STATIC, filename),
                 os.path.join(self.destination_path, filename))
@@ -174,7 +174,8 @@ class Image(object):
         self.full_filename = full_filename
         self.path, self.filename = os.path.split(full_filename)
         self.basename, self.extension = os.path.splitext(self.filename)
-        self.thumbnail_filename = '%s_t%s' % (self.basename, self.extension)
+        self.thumbnail_filename = '{}_t{}' \
+            .format(self.basename, self.extension)
         self.page_name = self.basename
 
     def generate_image(self):
@@ -183,19 +184,19 @@ class Image(object):
                                             self.filename)
         if self.gallery.resize:
             # Resize image.
-            debug('Resizing image "%s" ...' % self.full_filename)
+            debug('Resizing image "{}" ...', self.full_filename)
             resize_image(
                 self.full_filename,
                 destination_filename,
                 self.gallery.max_image_size)
         else:
             # Copy image.
-            debug('Copying image "%s" ...' % self.full_filename)
+            debug('Copying image "{}" ...', self.full_filename)
             shutil.copy(self.full_filename, destination_filename)
 
     def generate_thumbnail(self):
         """Create a preview of an image."""
-        debug('Creating thumbnail "%s" ...' % self.thumbnail_filename)
+        debug('Creating thumbnail "{}" ...', self.thumbnail_filename)
         destination_filename = os.path.join(self.gallery.destination_path,
                                             self.thumbnail_filename)
         resize_image(
@@ -240,7 +241,7 @@ def parse_dimension_arg(value):
         return Dimension(*map(int, value.split('x', 1)))
     except ValueError:
         raise argparse.ArgumentTypeError(
-            'invalid dimension value: %r' % value)
+            'invalid dimension value: {!r}'.format(value))
 
 def parse_args():
     """Parse command-line arguments."""
@@ -267,16 +268,16 @@ def parse_args():
         dest='max_image_size',
         type=parse_dimension_arg,
         default=ARGS_DEFAULT_MAX_IMAGE_SIZE,
-        help='set maximum image size [default: %s]'
-              % ARGS_DEFAULT_MAX_IMAGE_SIZE)
+        help='set maximum image size [default: {}]'
+             .format(ARGS_DEFAULT_MAX_IMAGE_SIZE))
 
     parser.add_argument(
         '-t', '--thumbnail-size',
         dest='max_thumbnail_size',
         type=parse_dimension_arg,
         default=ARGS_DEFAULT_MAX_THUMBNAIL_SIZE,
-        help='set maximum thumbnail size [default: %s]'
-              % ARGS_DEFAULT_MAX_THUMBNAIL_SIZE)
+        help='set maximum thumbnail size [default: {}]'
+             .format(ARGS_DEFAULT_MAX_THUMBNAIL_SIZE))
 
     parser.add_argument(
         '--title',
@@ -300,7 +301,7 @@ def handle_duplicate_filenames(paths):
     if duplicates:
         print('Found duplicate filenames:')
         for filename, paths in duplicates:
-            print('  + "%s" appears in the following paths:' % filename)
+            print('  + "{}" appears in the following paths:'.format(filename))
             for path in paths:
                 print('    - ' + path)
         sys.exit('Clashing target filenames, aborting.')
