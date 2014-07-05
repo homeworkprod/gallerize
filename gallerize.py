@@ -265,7 +265,7 @@ def parse_args():
     parser.add_argument(
         '-s', '--size',
         dest='max_image_size',
-        type=Dimension,
+        type=parse_dimension_arg,
         default=ARGS_DEFAULT_MAX_IMAGE_SIZE,
         help='set maximum image size [default: %s]'
               % ARGS_DEFAULT_MAX_IMAGE_SIZE)
@@ -273,7 +273,7 @@ def parse_args():
     parser.add_argument(
         '-t', '--thumbnail-size',
         dest='max_thumbnail_size',
-        type=Dimension,
+        type=parse_dimension_arg,
         default=ARGS_DEFAULT_MAX_THUMBNAIL_SIZE,
         help='set maximum thumbnail size [default: %s]'
               % ARGS_DEFAULT_MAX_THUMBNAIL_SIZE)
