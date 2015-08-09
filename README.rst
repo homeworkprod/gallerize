@@ -99,6 +99,24 @@ in this case):
   $ tox -e py34
 
 
+Usage
+=====
+
+To create a gallery in the directory `output` from a all images in the
+directory `images`:
+
+.. code:: sh
+
+  $ ./gallerize.py output/ images/*
+
+See the usage help for more information on specifying a gallery title,
+image captions, and image dimensions:
+
+.. code:: sh
+
+  $ ./gallerize.py --help
+
+
 .. _Python: http://www.python.org/
 .. _ImageMagick: http://www.imagemagick.org/
 .. _Jinja: http://jinja.pocoo.org/
