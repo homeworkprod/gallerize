@@ -9,7 +9,7 @@ Create a static HTML/CSS image gallery from a bunch of images.
 
 See README for details.
 
-:Copyright: 2007-2013 Jochen Kupperschmidt
+:Copyright: 2007-2015 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 
