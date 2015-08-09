@@ -68,7 +68,7 @@ Tests
 Run with py.test
 ----------------
 
-Install py.test_ as test runner:
+Install pytest_ as test runner:
 
 .. code:: sh
 
@@ -91,12 +91,12 @@ To easily run tests in different Python interpreters, use tox_:
   $ pip install tox
   $ tox
 
-And to test against a single, specific Python interpreter (version 3.3,
+And to test against a single, specific Python interpreter (version 3.4,
 in this case):
 
 .. code:: sh
 
-  $ tox -e py33
+  $ tox -e py34
 
 
 .. _Python: http://www.python.org/
@@ -104,5 +104,5 @@ in this case):
 .. _Jinja: http://jinja.pocoo.org/
 .. _virtualenv: http://www.virtualenv.org/
 .. _pip: http://www.pip-installer.org/
-.. _py.test: http://pytest.org/
+.. _pytest: http://pytest.org/
 .. _tox: http://tox.testrun.org/
