@@ -25,9 +25,7 @@
     <nav>
       <ol>
         <li>&larr; <a href="../">Back</a></li>
-        {%- if gallery_lightbox %}
-        <li>&harr; <a href="./index_bare.html">Disable Effects?</a> </li>
-        {%- endif %}
+        <li>&harr; <a href="./index.html">Enable Effects?</a> </li>
         <li>{{ gallery.images|length }} images</li>
       </ol>
     </nav>
@@ -37,11 +35,7 @@
     {%- for image in gallery.images %}
       <li>
         <figure>
-          {%- if gallery_lightbox %}
-          <a href="{{ image.filename }}" rel="lightbox"><img src="{{ image.thumbnail_filename }}"/></a>
-          {%- else %}
-          <a href="{{ url_for_page(image.page_name) }}"><img src="{{ image.thumbnail_filename }}"/></a>
-          {%- endif %}
+          <a href="{{ image.filename }}"><img src="{{ image.thumbnail_filename }}"/></a>
         </figure>
       </li>
     {%- endfor %}

@@ -2,14 +2,8 @@
 gallerize
 =========
 
-Create a static HTML/CSS image gallery from a bunch of images.
-
-
-:Copyright: 2007-2015 Jochen Kupperschmidt
-:License: MIT, see LICENSE for details.
-:Version: 0.3.2
-:Date: 09-Aug-2015
-
+Create a static HTML/CSS image gallery from a bunch of images.  
+Can use lightbox jQuery effect.  
 
 Features
 ========
@@ -18,7 +12,7 @@ Features
 - Generates clean, slim, semantically appropriate HTML5 and uses
   CSS 3 for styling.  As a result, the output can easily be themed.
 - Provides HTML access keys for keyboard navigation.
-
+- Can use lightbox jQuery effect.
 
 Requirements
 ============
@@ -124,3 +118,19 @@ image captions, and image dimensions:
 .. _pip: http://www.pip-installer.org/
 .. _pytest: http://pytest.org/
 .. _tox: http://tox.testrun.org/
+
+
+Credits / Thanks
+================
+
+:Name: Original Gallerize
+:Link: https://github.com/homeworkprod/gallerize
+:Copyright: 2007-2015 Jochen Kupperschmidt
+:License: MIT, see LICENSE for details.
+:Version: 0.3.2
+:Date: 09-Aug-2015
+
+------------
+
+:Name: WP jQuery Lightbox by Ulf Benjaminsson
+:Link: https://wordpress.org/plugins/wp-jquery-lightbox/

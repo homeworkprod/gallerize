@@ -87,6 +87,7 @@ class Gallery(object):
         gallery.resize = not args.no_resize
         gallery.max_image_size = args.max_image_size
         gallery.max_thumbnail_size = args.max_thumbnail_size
+        gallery.lightbox = args.lightbox
 
         return gallery
 
@@ -124,9 +125,12 @@ class Gallery(object):
         write_file(filename, css)
 
     def render_html_pages(self):
-        for image in self.images:
-            image.render_html_page()
+        if not args.lightbox:
+            for image in self.images:
+                image.render_html_page()
         self.render_html_index_page()
+        if args.lightbox:
+            self.render_html_index_nolightbox_page()
 
     def render_html_index_page(self):
         """Create an HTML document of thumbnails that link to single image
@@ -136,6 +140,15 @@ class Gallery(object):
             'gallery': self,
         }
         render_html_to_file('index', context, self.destination_path, 'index')
+
+    def render_html_index_nolightbox_page(self):
+        """Create an HTML document of thumbnails that link to single image
+        documents without lightbox.
+        """
+        context = {
+            'gallery': self,
+        }
+        render_html_to_file('index_bare', context, self.destination_path, 'index_bare')
 
     def copy_additional_static_files(self):
         if not os.path.exists(PATH_STATIC):
@@ -283,6 +296,13 @@ def parse_args():
         '--title',
         dest='title',
         help='set gallery title on the website')
+
+    parser.add_argument(
+        '--lightbox',
+        dest='lightbox',
+        action='store_true',
+        default=False,
+        help='Enable lightbox effect on the website. This disables sub-page creation per picture.')
 
     # First positional argument.
     parser.add_argument('destination_path')

@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="style.css"/>
     {%- block head_additions %}{% endblock %}
     <title>{% if gallery_title is not none %}{{ gallery_title }}{% endif %}</title>
+    {%- if gallery_lightbox %}
+    <link rel="stylesheet" href="./lightbox.min.css" type="text/css" media="screen" />
+    <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'></script>
+    <!-- <script type='text/javascript' src='./jquery.min.js'></script> -->
+    <script type="text/javascript" src="./jquery.lightbox.min.js"></script>
+    {%- endif %}
   </head>
   <body>
 
