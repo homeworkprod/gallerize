@@ -174,7 +174,7 @@ class Image(object):
         self.full_filename = full_filename
         self.path, self.filename = os.path.split(full_filename)
         self.basename, self.extension = os.path.splitext(self.filename)
-        self.thumbnail_filename = '{}_t{}' \
+        self.thumbnail_filename = 'thumbnail_{}{}' \
             .format(self.basename, self.extension)
         self.page_name = self.basename
 
