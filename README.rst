@@ -3,7 +3,7 @@ gallerize
 =========
 
 Create a static HTML/CSS image gallery from a bunch of images.  
-Can use lightbox jQuery effect.  
+Can use fancybox (similar to lightbox) jQuery effect.  
 
 Features
 ========
@@ -12,7 +12,7 @@ Features
 - Generates clean, slim, semantically appropriate HTML5 and uses
   CSS 3 for styling.  As a result, the output can easily be themed.
 - Provides HTML access keys for keyboard navigation.
-- Can use lightbox jQuery effect.
+- Can use fancybox (similar to lightbox) jQuery effect.
 - Optimize image to reduce size and remove meta info.
 
 Requirements
@@ -135,5 +135,6 @@ Credits / Thanks
 
 ------------
 
-:Name: WP jQuery Lightbox by Ulf Benjaminsson
-:Link: https://wordpress.org/plugins/wp-jquery-lightbox/
+:Name: Fancybox v3
+:Link: https://fancyapps.com/fancybox/3/
+:Copyright: fancybox is licensed under the GPLv3 license for all open source applications. 

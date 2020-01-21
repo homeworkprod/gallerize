@@ -38,7 +38,7 @@
       <li>
         <figure>
           {%- if gallery_lightbox %}
-          <a href="{{ image.filename }}" rel="lightbox"><img src="{{ image.thumbnail_filename }}"/></a>
+          <a href="{{ image.filename }}" rel="lightbox" data-fancybox="gallery"><img src="{{ image.thumbnail_filename }}"/></a>
           {%- else %}
           <a href="{{ url_for_page(image.page_name) }}"><img src="{{ image.thumbnail_filename }}"/></a>
           {%- endif %}
