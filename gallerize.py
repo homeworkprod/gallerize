@@ -54,6 +54,11 @@ def resize_image(src_filename, dst_filename, max_dimension):
     cmd = ['convert', '-resize', dimension_str, src_filename, dst_filename]
     subprocess.check_call(cmd)
 
+def optimize_image(dst_filename):
+    """Optimize image and strip exif and other non important meta-data."""
+    cmd = ['jpegoptim', '--strip-all', dst_filename]
+    subprocess.check_call(cmd)
+
 def render_html_to_file(template_name, context, path, page_name):
     """Render the template and write the result to the given file."""
     context['url_for_page'] = lambda page: page + OUTPUT_HTML_EXTENSION
@@ -88,6 +93,8 @@ class Gallery(object):
         gallery.max_image_size = args.max_image_size
         gallery.max_thumbnail_size = args.max_thumbnail_size
         gallery.lightbox = args.lightbox
+        gallery.not_html_only = not args.html_only
+        gallery.optimize_image = not args.no_optimize_image
 
         return gallery
 
@@ -195,27 +202,39 @@ class Image(object):
         """Create a (optionally resized) copy of an image."""
         destination_filename = os.path.join(self.gallery.destination_path,
                                             self.filename)
-        if self.gallery.resize:
-            # Resize image.
-            debug('Resizing image "{}" ...', self.full_filename)
-            resize_image(
-                self.full_filename,
-                destination_filename,
-                self.gallery.max_image_size)
-        else:
-            # Copy image.
-            debug('Copying image "{}" ...', self.full_filename)
-            shutil.copy(self.full_filename, destination_filename)
+        if self.gallery.not_html_only:
+            if self.gallery.resize:
+                # Resize image.
+                debug('Resizing image "{}" ...', self.full_filename)
+                resize_image(
+                    self.full_filename,
+                    destination_filename,
+                    self.gallery.max_image_size)
+            else:
+                # Copy image.
+                debug('Copying image "{}" ...', self.full_filename)
+                shutil.copy(self.full_filename, destination_filename)
+
+            if self.gallery.optimize_image:
+                optimize_image(
+                    destination_filename)
 
     def generate_thumbnail(self):
         """Create a preview of an image."""
-        debug('Creating thumbnail "{}" ...', self.thumbnail_filename)
         destination_filename = os.path.join(self.gallery.destination_path,
                                             self.thumbnail_filename)
-        resize_image(
-            self.full_filename,
-            destination_filename,
-            self.gallery.max_thumbnail_size)
+
+        if self.gallery.not_html_only:
+            debug('Creating thumbnail "{}" ...', self.thumbnail_filename)
+
+            resize_image(
+                self.full_filename,
+                destination_filename,
+                self.gallery.max_thumbnail_size)
+
+            if self.gallery.optimize_image:
+                optimize_image(
+                    destination_filename)
 
     def load_caption(self):
         """Load image caption from file."""
@@ -303,6 +322,20 @@ def parse_args():
         action='store_true',
         default=False,
         help='Enable lightbox effect on the website. This disables sub-page creation per picture.')
+
+    parser.add_argument(
+        '--html-only',
+        dest='html_only',
+        action='store_true',
+        default=False,
+        help='Only generate HTML. Do not process images. This is useful if already processed once but need to re-create html pages.')
+
+    parser.add_argument(
+        '--no-optimize-image',
+        dest='no_optimize_image',
+        action='store_true',
+        default=False,
+        help='Optimize images to reduce size and remove meta data.')
 
     # First positional argument.
     parser.add_argument('destination_path')
