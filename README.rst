@@ -15,6 +15,7 @@ Features
 - Generates clean, slim, semantically appropriate HTML5 and uses
   CSS 3 for styling.  As a result, the output can easily be themed.
 - Provides HTML access keys for keyboard navigation.
+- Optimizes images to reduce size and remove metadata.
 
 
 Requirements
@@ -23,6 +24,7 @@ Requirements
 - Python_ 3.7+
 - Jinja_
 - ImageMagick_ (tested with 6.6.9-7)
+- jpegoptim_ (tested with 1.4.6)
 
 
 Installation
@@ -31,11 +33,11 @@ Installation
 It is recommended to create a virtual environment and run gallerize
 inside it.
 
-To install ImageMagick_ and virtualenv_ on Debian/Ubuntu:
+To install ImageMagick_, jpegoptim_, and virtualenv_ on Debian/Ubuntu:
 
 .. code:: sh
 
-  $ aptitude install imagemagick python-virtualenv
+  $ aptitude install imagemagick jpegoptim python-virtualenv
 
 This should also give you a copy of pip_.
 
@@ -98,6 +100,7 @@ image captions, and image dimensions:
 
 .. _Python: http://www.python.org/
 .. _ImageMagick: http://www.imagemagick.org/
+.. _jpegoptim: https://github.com/tjko/jpegoptim
 .. _Jinja: http://jinja.pocoo.org/
 .. _virtualenv: http://www.virtualenv.org/
 .. _pip: http://www.pip-installer.org/

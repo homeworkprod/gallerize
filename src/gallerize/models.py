@@ -37,4 +37,5 @@ class Gallery:
     resize: bool
     max_image_size: Dimension
     max_thumbnail_size: Dimension
+    optimize_images: bool
     images: list[Image]

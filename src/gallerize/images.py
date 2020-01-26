@@ -39,6 +39,9 @@ def _generate_image(image: Image, gallery: Gallery) -> None:
         debug('Copying image "{}" ...', image.full_filename)
         shutil.copy(image.full_filename, destination_filename)
 
+        if gallery.optimize_images:
+            optimize_image(destination_filename)
+
 
 def _generate_thumbnail(image: Image, gallery: Gallery) -> None:
     """Create a small preview image for an image."""
@@ -49,6 +52,9 @@ def _generate_thumbnail(image: Image, gallery: Gallery) -> None:
         destination_filename,
         gallery.max_thumbnail_size,
     )
+
+    if gallery.optimize_images:
+        optimize_image(destination_filename)
 
 
 def _resize_image(
@@ -63,4 +69,10 @@ def _resize_image(
         str(src_filename),
         str(dst_filename),
     ]
+    subprocess.check_call(cmd)
+
+
+def optimize_image(filename: Path) -> None:
+    """Optimize image and strip EXIF and other non-important metadata."""
+    cmd = ['jpegoptim', '--strip-all', str(filename)]
     subprocess.check_call(cmd)

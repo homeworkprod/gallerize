@@ -44,6 +44,13 @@ def parse_args():
     )
 
     parser.add_argument(
+        '--optimize-images',
+        dest='optimize_images',
+        action='store_true',
+        default=False,
+        help='optimize images to reduce size and remove metadata')
+
+    parser.add_argument(
         '--no-resize',
         dest='resize',
         action='store_false',
@@ -96,6 +103,7 @@ def main():
             resize=args.resize,
             max_image_size=args.max_image_size,
             max_thumbnail_size=args.max_thumbnail_size,
+            optimize_images=args.optimize_images,
             full_image_filenames=args.full_image_filenames,
         )
         generate_gallery(gallery)

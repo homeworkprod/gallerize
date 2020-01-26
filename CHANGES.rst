@@ -10,6 +10,9 @@ Unreleased
 - Added support for Python 3.7, 3.8, and 3.9. Removed support for
   versions older than that.
 
+- Added command line option ``--optimize-images`` to optimize and strip
+  metadata from images. (contributed by Ryan Daniels)
+
 - Added command line option ``--version`` to show version number.
 
 - Turned single module into package.

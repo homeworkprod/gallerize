@@ -32,6 +32,7 @@ def create_gallery(
     resize: bool,
     max_image_size: Dimension,
     max_thumbnail_size: Dimension,
+    optimize_images: bool,
     full_image_filenames: list[Path],
 ) -> Gallery:
     images = [create_image(image) for image in sorted(full_image_filenames)]
@@ -43,6 +44,7 @@ def create_gallery(
         resize=resize,
         max_image_size=max_image_size,
         max_thumbnail_size=max_thumbnail_size,
+        optimize_images=optimize_images,
         images=images,
     )
 
