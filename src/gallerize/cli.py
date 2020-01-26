@@ -44,6 +44,14 @@ def parse_args():
     )
 
     parser.add_argument(
+        '--html-only',
+        dest='html_only',
+        action='store_true',
+        default=False,
+        help='only (re-)generate HTML, do not process images',
+    )
+
+    parser.add_argument(
         '--optimize-images',
         dest='optimize_images',
         action='store_true',
@@ -109,6 +117,7 @@ def main():
         )
 
         config = Config(
+            html_only=args.html_only,
             resize_images=args.resize_images,
             optimize_images=args.optimize_images,
         )

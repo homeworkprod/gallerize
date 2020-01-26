@@ -65,9 +65,15 @@ def generate_gallery(gallery: Gallery, config: Config) -> None:
         gallery.destination_path.mkdir()
 
     gallery = add_image_captions(gallery)
-    generate_images(gallery, config.resize_images, config.optimize_images)
+
+    if not config.html_only:
+        generate_images(gallery, config.resize_images, config.optimize_images)
+
     render_html_pages(gallery)
-    copy_additional_static_files(gallery.destination_path)
+
+    if not config.html_only:
+        copy_additional_static_files(gallery.destination_path)
+
     debug('Done.')
 
 

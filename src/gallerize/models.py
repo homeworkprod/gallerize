@@ -41,5 +41,6 @@ class Gallery:
 
 @dataclass(frozen=True)
 class Config:
+    html_only: bool
     resize_images: bool
     optimize_images: bool
