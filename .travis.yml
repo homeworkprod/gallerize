@@ -4,7 +4,6 @@ python:
   - "3.3"
   - "3.4"
 install:
-  - "pip install tox"
+  - "pip install -r requirements.txt pytest"
 script:
-  - tox
-sudo: false
+  - "pytest"

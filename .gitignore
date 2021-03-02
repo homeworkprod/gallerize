@@ -4,7 +4,4 @@
 # virtual environment
 venv
 
-# tox' local data
-.tox
-
 *.egg-info

@@ -62,8 +62,8 @@ Tests
 =====
 
 
-Run with py.test
-----------------
+Run with pytest
+---------------
 
 Install pytest_ as test runner:
 
@@ -75,25 +75,7 @@ Run tests:
 
 .. code:: sh
 
-  $ py.test test_gallerize.py
-
-
-Run with tox
-------------
-
-To easily run tests in different Python interpreters, use tox_:
-
-.. code:: sh
-
-  $ pip install tox
-  $ tox
-
-And to test against a single, specific Python interpreter (version 3.4,
-in this case):
-
-.. code:: sh
-
-  $ tox -e py34
+  $ pytest test_gallerize.py
 
 
 Usage
@@ -120,4 +102,3 @@ image captions, and image dimensions:
 .. _virtualenv: http://www.virtualenv.org/
 .. _pip: http://www.pip-installer.org/
 .. _pytest: http://pytest.org/
-.. _tox: http://tox.testrun.org/
