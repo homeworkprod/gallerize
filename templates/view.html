@@ -1,4 +1,7 @@
 {% extends "_layout.html" %}
+
+{% set gallery_title = image.gallery.title %}
+
 {% block head_additions %}
     <link rel="up" href="{{ url_for_page('index') }}">
     {%- if image.previous_image %}
@@ -8,7 +11,7 @@
     <link rel="next" href="{{ url_for_page(image.next_image.page_name) }}">
     {%- endif %}
 {%- endblock head_additions %}
-{% set gallery_title = image.gallery.title %}
+
 {% block body %}
 
     <header>

@@ -1,4 +1,7 @@
 {% extends "_layout.html" %}
+
+{% set gallery_title = gallery.title %}
+
 {% block head_additions %}
     <style>
       ol.thumbnails li {
@@ -12,7 +15,7 @@
       }
     </style>
 {%- endblock head_additions %}
-{% set gallery_title = gallery.title %}
+
 {% block body %}
 
     {%- if gallery.title is not none %}
