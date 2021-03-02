@@ -37,17 +37,20 @@ PATH_STATIC = os.path.join(PATH, 'static')
 TEMPLATE_ENVIRONMENT = Environment(
     autoescape=True,
     loader=FileSystemLoader(os.path.join(PATH, 'templates')),
-    trim_blocks=False)
+    trim_blocks=False,
+)
 
 
 def debug(message, *args):
     print(message.format(*args))
+
 
 def resize_image(src_filename, dst_filename, max_dimension):
     """Create a resized (and antialiased) version of an image."""
     dimension_str = f'{max_dimension.width:d}x{max_dimension.height:d}'
     cmd = ['convert', '-resize', dimension_str, src_filename, dst_filename]
     subprocess.check_call(cmd)
+
 
 def render_html_to_file(template_name, context, path, page_name):
     """Render the template and write the result to the given file."""
@@ -57,10 +60,10 @@ def render_html_to_file(template_name, context, path, page_name):
     filename = os.path.join(path, page_name + OUTPUT_HTML_EXTENSION)
     write_file(filename, html)
 
+
 def render_template(template_filename, **context):
-    return TEMPLATE_ENVIRONMENT \
-        .get_template(template_filename) \
-        .render(context)
+    return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
+
 
 def write_file(filename, content):
     with codecs.open(filename, 'wb', 'utf-8') as f:
@@ -69,13 +72,13 @@ def write_file(filename, content):
 
 
 class Gallery:
-
     @classmethod
     def from_args(cls, args):
         gallery = Gallery()
 
-        gallery.images = [Image(gallery, image)
-                          for image in sorted(args.full_image_filenames)]
+        gallery.images = [
+            Image(gallery, image) for image in sorted(args.full_image_filenames)
+        ]
         gallery.link_images()
         gallery.title = args.title
         gallery.destination_path = args.destination_path
@@ -87,16 +90,19 @@ class Gallery:
 
     def link_images(self):
         """Assign the predecessor and successor for every image."""
-        for previous_image, image, next_image \
-                in window([None] + self.images + [None], 3):
+        for previous_image, image, next_image in window(
+            [None] + self.images + [None], 3
+        ):
             image.previous_image = previous_image
             image.next_image = next_image
 
     def generate(self):
         # Create destination path if it doesn't exist.
         if not os.path.exists(self.destination_path):
-            debug('Destination path "{}" does not exist, creating it.',
-                  self.destination_path)
+            debug(
+                'Destination path "{}" does not exist, creating it.',
+                self.destination_path,
+            )
             os.mkdir(self.destination_path)
 
         self.generate_images()
@@ -134,8 +140,10 @@ class Gallery:
 
     def copy_additional_static_files(self):
         if not os.path.exists(PATH_STATIC):
-            debug('Path "{}", does not exist; not copying any static files.',
-                  PATH_STATIC)
+            debug(
+                'Path "{}", does not exist; not copying any static files.',
+                PATH_STATIC,
+            )
             return
 
         filenames = list(sorted(os.listdir(PATH_STATIC)))
@@ -145,7 +153,8 @@ class Gallery:
             debug('Copying static file "{}" ...', filename)
             shutil.copy(
                 os.path.join(PATH_STATIC, filename),
-                os.path.join(self.destination_path, filename))
+                os.path.join(self.destination_path, filename),
+            )
 
 
 def window(iterable, n):
@@ -174,15 +183,17 @@ class Image:
 
     def generate_image(self):
         """Create a (optionally resized) copy of an image."""
-        destination_filename = os.path.join(self.gallery.destination_path,
-                                            self.filename)
+        destination_filename = os.path.join(
+            self.gallery.destination_path, self.filename
+        )
         if self.gallery.resize:
             # Resize image.
             debug('Resizing image "{}" ...', self.full_filename)
             resize_image(
                 self.full_filename,
                 destination_filename,
-                self.gallery.max_image_size)
+                self.gallery.max_image_size,
+            )
         else:
             # Copy image.
             debug('Copying image "{}" ...', self.full_filename)
@@ -191,18 +202,20 @@ class Image:
     def generate_thumbnail(self):
         """Create a preview of an image."""
         debug('Creating thumbnail "{}" ...', self.thumbnail_filename)
-        destination_filename = os.path.join(self.gallery.destination_path,
-                                            self.thumbnail_filename)
+        destination_filename = os.path.join(
+            self.gallery.destination_path, self.thumbnail_filename
+        )
         resize_image(
             self.full_filename,
             destination_filename,
-            self.gallery.max_thumbnail_size)
+            self.gallery.max_thumbnail_size,
+        )
 
     def load_caption(self):
         """Load image caption from file."""
         caption_filename = os.path.join(
-            self.path,
-            self.filename + IMAGE_CAPTION_EXTENSION)
+            self.path, self.filename + IMAGE_CAPTION_EXTENSION
+        )
         self.caption = self._read_first_line(caption_filename)
 
     def _read_first_line(self, filename):
@@ -219,8 +232,9 @@ class Image:
         context = {
             'image': self,
         }
-        render_html_to_file('view', context, self.gallery.destination_path,
-                            self.page_name)
+        render_html_to_file(
+            'view', context, self.gallery.destination_path, self.page_name
+        )
 
 
 # -------------------------------------------------------------------- #
@@ -240,44 +254,52 @@ def parse_dimension_arg(value):
     except ValueError:
         raise argparse.ArgumentTypeError(f'invalid dimension value: {value!r}')
 
+
 def parse_args():
     """Parse command-line arguments."""
 
     parser = argparse.ArgumentParser(
-        usage='%(prog)s [options] <target path> <image> [image] ...')
+        usage='%(prog)s [options] <target path> <image> [image] ...'
+    )
 
     parser.add_argument(
-        '-c', '--captions',
+        '-c',
+        '--captions',
         dest='captions',
         action='store_true',
         default=False,
-        help='read image captions from text files ("<IMAGE_NAME>.txt")')
+        help='read image captions from text files ("<IMAGE_NAME>.txt")',
+    )
 
     parser.add_argument(
         '--no-resize',
         dest='no_resize',
         action='store_true',
         default=False,
-        help='do not resize images, just copy them')
+        help='do not resize images, just copy them',
+    )
 
     parser.add_argument(
-        '-s', '--size',
+        '-s',
+        '--size',
         dest='max_image_size',
         type=parse_dimension_arg,
         default=ARGS_DEFAULT_MAX_IMAGE_SIZE,
-        help=f'set maximum image size [default: {ARGS_DEFAULT_MAX_IMAGE_SIZE}]')
+        help=f'set maximum image size [default: {ARGS_DEFAULT_MAX_IMAGE_SIZE}]',
+    )
 
     parser.add_argument(
-        '-t', '--thumbnail-size',
+        '-t',
+        '--thumbnail-size',
         dest='max_thumbnail_size',
         type=parse_dimension_arg,
         default=ARGS_DEFAULT_MAX_THUMBNAIL_SIZE,
-        help=f'set maximum thumbnail size [default: {ARGS_DEFAULT_MAX_THUMBNAIL_SIZE}]')
+        help=f'set maximum thumbnail size [default: {ARGS_DEFAULT_MAX_THUMBNAIL_SIZE}]',
+    )
 
     parser.add_argument(
-        '--title',
-        dest='title',
-        help='set gallery title on the website')
+        '--title', dest='title', help='set gallery title on the website'
+    )
 
     # First positional argument.
     parser.add_argument('destination_path')
@@ -300,6 +322,7 @@ def handle_duplicate_filenames(paths):
             for path in paths:
                 print(f'    - {path}')
         sys.exit('Clashing target filenames, aborting.')
+
 
 def find_duplicate_filenames(paths):
     d = defaultdict(list)
