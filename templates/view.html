@@ -1,11 +1,11 @@
 {% extends "_layout.html" %}
 {% block head_additions %}
-    <link rel="up" href="{{ url_for_page('index') }}"/>
+    <link rel="up" href="{{ url_for_page('index') }}">
     {%- if image.previous_image %}
-    <link rel="prev" href="{{ url_for_page(image.previous_image.page_name) }}"/>
+    <link rel="prev" href="{{ url_for_page(image.previous_image.page_name) }}">
     {%- endif %}
     {%- if image.next_image %}
-    <link rel="next" href="{{ url_for_page(image.next_image.page_name) }}"/>
+    <link rel="next" href="{{ url_for_page(image.next_image.page_name) }}">
     {%- endif %}
 {%- endblock head_additions %}
 {% set gallery_title = image.gallery.title %}
@@ -31,7 +31,7 @@
     </nav>
 
     <figure>
-      <img src="{{ image.filename }}"/>
+      <img src="{{ image.filename }}">
       {%- if image.caption %}
       <figcaption>{{ image.caption }}</figcaption>
       {%- endif %}
