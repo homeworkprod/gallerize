@@ -10,7 +10,7 @@ def read_readme():
 
 setup(
     name='gallerize',
-    version='0.3.2',
+    version='0.4-dev',
     description='Create a static HTML/CSS image gallery from a bunch of images.',
     long_description=read_readme(),
     license='MIT',
