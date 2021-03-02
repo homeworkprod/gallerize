@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 gallerize
@@ -13,14 +12,9 @@ See README for details.
 :License: MIT, see LICENSE for details.
 """
 
-from __future__ import print_function
 import argparse
 import codecs
 from collections import defaultdict, namedtuple
-try:
-    from future_builtins import filter, map  # Python 2.6+
-except ImportError:
-    pass  # Python 3+
 from itertools import islice
 import os
 import shutil
@@ -73,7 +67,7 @@ def write_file(filename, content):
         f.write(content)
 
 
-class Gallery(object):
+class Gallery:
 
     @classmethod
     def from_args(cls, args):
@@ -164,7 +158,7 @@ def window(iterable, n):
         yield result
 
 
-class Image(object):
+class Image:
 
     previous_image = None
     next_image = None

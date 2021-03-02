@@ -7,6 +7,8 @@ Version 0.4
 
 Unreleased
 
+- Removed support for Python 2.
+
 
 Version 0.3.2
 -------------
