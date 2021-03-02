@@ -45,7 +45,7 @@ def debug(message, *args):
 
 def resize_image(src_filename, dst_filename, max_dimension):
     """Create a resized (and antialiased) version of an image."""
-    dimension_str = '{0.width:d}x{0.height:d}'.format(max_dimension)
+    dimension_str = f'{max_dimension.width:d}x{max_dimension.height:d}'
     cmd = ['convert', '-resize', dimension_str, src_filename, dst_filename]
     subprocess.check_call(cmd)
 
@@ -169,8 +169,7 @@ class Image:
         self.full_filename = full_filename
         self.path, self.filename = os.path.split(full_filename)
         self.basename, self.extension = os.path.splitext(self.filename)
-        self.thumbnail_filename = '{}_t{}' \
-            .format(self.basename, self.extension)
+        self.thumbnail_filename = f'{self.basename}_t{self.extension}'
         self.page_name = self.basename
 
     def generate_image(self):
@@ -239,8 +238,7 @@ def parse_dimension_arg(value):
     try:
         return Dimension(*map(int, value.split('x', 1)))
     except ValueError:
-        raise argparse.ArgumentTypeError(
-            'invalid dimension value: {!r}'.format(value))
+        raise argparse.ArgumentTypeError(f'invalid dimension value: {value!r}')
 
 def parse_args():
     """Parse command-line arguments."""
@@ -267,16 +265,14 @@ def parse_args():
         dest='max_image_size',
         type=parse_dimension_arg,
         default=ARGS_DEFAULT_MAX_IMAGE_SIZE,
-        help='set maximum image size [default: {}]'
-             .format(ARGS_DEFAULT_MAX_IMAGE_SIZE))
+        help=f'set maximum image size [default: {ARGS_DEFAULT_MAX_IMAGE_SIZE}]')
 
     parser.add_argument(
         '-t', '--thumbnail-size',
         dest='max_thumbnail_size',
         type=parse_dimension_arg,
         default=ARGS_DEFAULT_MAX_THUMBNAIL_SIZE,
-        help='set maximum thumbnail size [default: {}]'
-             .format(ARGS_DEFAULT_MAX_THUMBNAIL_SIZE))
+        help=f'set maximum thumbnail size [default: {ARGS_DEFAULT_MAX_THUMBNAIL_SIZE}]')
 
     parser.add_argument(
         '--title',
@@ -300,9 +296,9 @@ def handle_duplicate_filenames(paths):
     if duplicates:
         print('Found duplicate filenames:')
         for filename, paths in duplicates:
-            print('  + "{}" appears in the following paths:'.format(filename))
+            print(f'  + "{filename}" appears in the following paths:')
             for path in paths:
-                print('    - ' + path)
+                print(f'    - {path}')
         sys.exit('Clashing target filenames, aborting.')
 
 def find_duplicate_filenames(paths):
