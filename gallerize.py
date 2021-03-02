@@ -14,7 +14,8 @@ See README for details.
 
 import argparse
 import codecs
-from collections import defaultdict, namedtuple
+from collections import defaultdict
+from dataclasses import dataclass
 from itertools import islice
 import os
 import shutil
@@ -227,7 +228,11 @@ class Image:
 # command line argument parsing
 
 
-Dimension = namedtuple('Dimension', ['width', 'height'])
+@dataclass(frozen=True)
+class Dimension:
+    width: int
+    height: int
+
 
 def parse_dimension_arg(value):
     """Validate a dimension value."""
