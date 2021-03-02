@@ -10,7 +10,7 @@ Unreleased
 - Added support for Python 3.7, 3.8, and 3.9. Removed support for
   versions older than that.
 
-- Tweak HTML.
+- Tweak HTML and CSS.
 
 
 Version 0.3.2
