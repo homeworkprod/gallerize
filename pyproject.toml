@@ -2,3 +2,6 @@
 line-length = 80
 skip-string-normalization = true
 target-version = ['py37']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
