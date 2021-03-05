@@ -62,7 +62,7 @@ def render_template(template_filename, **context):
 
 
 def write_file(filename, content):
-    with codecs.open(filename, 'wb', 'utf-8') as f:
+    with codecs.open(filename, 'w', 'utf-8') as f:
         debug('Writing "{}" ...', filename)
         f.write(content)
 
