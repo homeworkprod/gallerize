@@ -70,19 +70,35 @@ def write_file(filename, content):
 class Gallery:
     @classmethod
     def from_args(cls, args):
-        gallery = Gallery()
+        gallery = Gallery(
+            title=args.title,
+            destination_path=args.destination_path,
+            resize=not args.no_resize,
+            max_image_size=args.max_image_size,
+            max_thumbnail_size=args.max_thumbnail_size,
+        )
 
         gallery.images = [
             Image(gallery, image) for image in sorted(args.full_image_filenames)
         ]
         gallery.link_images()
-        gallery.title = args.title
-        gallery.destination_path = args.destination_path
-        gallery.resize = not args.no_resize
-        gallery.max_image_size = args.max_image_size
-        gallery.max_thumbnail_size = args.max_thumbnail_size
 
         return gallery
+
+    def __init__(
+        self,
+        title,
+        destination_path,
+        resize,
+        max_image_size,
+        max_thumbnail_size,
+    ):
+        self.images = []
+        self.title = title
+        self.destination_path = destination_path
+        self.resize = resize
+        self.max_image_size = max_image_size
+        self.max_thumbnail_size = max_thumbnail_size
 
     def link_images(self):
         """Assign the predecessor and successor for every image."""
@@ -163,10 +179,6 @@ def window(iterable):
 
 
 class Image:
-
-    previous_image = None
-    next_image = None
-
     def __init__(self, gallery, full_filename):
         self.gallery = gallery
         self.full_filename = full_filename
@@ -174,6 +186,8 @@ class Image:
         self.basename, self.extension = os.path.splitext(self.filename)
         self.thumbnail_filename = f'{self.basename}_t{self.extension}'
         self.page_name = self.basename
+        self.previous_image = None
+        self.next_image = None
 
     def generate_image(self):
         """Create a (optionally resized) copy of an image."""
