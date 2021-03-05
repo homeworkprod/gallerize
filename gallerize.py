@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 gallerize
 ~~~~~~~~~
@@ -338,7 +336,7 @@ def find_duplicate_filenames(paths):
 # -------------------------------------------------------------------- #
 
 
-if __name__ == '__main__':
+def main():
     try:
         args = parse_args()
         handle_duplicate_filenames(args.full_image_filenames)
