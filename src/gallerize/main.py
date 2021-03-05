@@ -104,7 +104,6 @@ class Gallery:
         self.generate_images()
         for image in self.images:
             image.load_caption()
-        self.generate_stylesheet()
         self.render_html_pages()
         self.copy_additional_static_files()
         debug('Done.')
@@ -114,11 +113,6 @@ class Gallery:
             image.generate_image()
             image.generate_thumbnail()
             image.load_caption()
-
-    def generate_stylesheet(self):
-        filename = os.path.join(self.destination_path, 'style.css')
-        css = render_template('style.css')
-        write_file(filename, css)
 
     def render_html_pages(self):
         for image in self.images:
