@@ -5,7 +5,7 @@
 
 import pytest
 
-from gallerize import find_duplicate_filenames
+from gallerize.main import find_duplicate_filenames
 
 
 @pytest.mark.parametrize(

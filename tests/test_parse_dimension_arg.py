@@ -5,7 +5,7 @@
 
 import pytest
 
-from gallerize import parse_dimension_arg
+from gallerize.cli import parse_dimension_arg
 
 
 @pytest.mark.parametrize(

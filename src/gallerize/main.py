@@ -1,16 +1,11 @@
 """
-gallerize
-~~~~~~~~~
-
-Create a static HTML/CSS image gallery from a bunch of images.
-
-See README for details.
+gallerize.main
+~~~~~~~~~~~~~~
 
 :Copyright: 2007-2021 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 
-import argparse
 import codecs
 from collections import defaultdict
 from dataclasses import dataclass
@@ -20,13 +15,8 @@ import shutil
 import subprocess
 import sys
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, PackageLoader
 
-
-VERSION = '0.4-dev'
-
-ARGS_DEFAULT_MAX_IMAGE_SIZE = '1024x1024'
-ARGS_DEFAULT_MAX_THUMBNAIL_SIZE = '120x120'
 
 IMAGE_CAPTION_EXTENSION = '.txt'
 TEMPLATE_EXTENSION = '.html'
@@ -36,9 +26,15 @@ PATH = os.path.dirname(os.path.abspath(__file__))
 PATH_STATIC = os.path.join(PATH, 'static')
 TEMPLATE_ENVIRONMENT = Environment(
     autoescape=True,
-    loader=FileSystemLoader(os.path.join(PATH, 'templates')),
+    loader=PackageLoader(__package__, 'templates'),
     trim_blocks=False,
 )
+
+
+@dataclass(frozen=True)
+class Dimension:
+    width: int
+    height: int
 
 
 def debug(message, *args):
@@ -238,79 +234,6 @@ class Image:
 
 
 # -------------------------------------------------------------------- #
-# command line argument parsing
-
-
-@dataclass(frozen=True)
-class Dimension:
-    width: int
-    height: int
-
-
-def parse_dimension_arg(value):
-    """Validate a dimension value."""
-    try:
-        return Dimension(*map(int, value.split('x', 1)))
-    except ValueError:
-        raise argparse.ArgumentTypeError(f'invalid dimension value: {value!r}')
-
-
-def parse_args():
-    """Parse command-line arguments."""
-
-    parser = argparse.ArgumentParser(
-        usage='%(prog)s [options] <target path> <image> [image] ...'
-    )
-
-    parser.add_argument(
-        '-c',
-        '--captions',
-        dest='captions',
-        action='store_true',
-        default=False,
-        help='read image captions from text files ("<IMAGE_NAME>.txt")',
-    )
-
-    parser.add_argument(
-        '--no-resize',
-        dest='no_resize',
-        action='store_true',
-        default=False,
-        help='do not resize images, just copy them',
-    )
-
-    parser.add_argument(
-        '-s',
-        '--size',
-        dest='max_image_size',
-        type=parse_dimension_arg,
-        default=ARGS_DEFAULT_MAX_IMAGE_SIZE,
-        help=f'set maximum image size [default: {ARGS_DEFAULT_MAX_IMAGE_SIZE}]',
-    )
-
-    parser.add_argument(
-        '-t',
-        '--thumbnail-size',
-        dest='max_thumbnail_size',
-        type=parse_dimension_arg,
-        default=ARGS_DEFAULT_MAX_THUMBNAIL_SIZE,
-        help=f'set maximum thumbnail size [default: {ARGS_DEFAULT_MAX_THUMBNAIL_SIZE}]',
-    )
-
-    parser.add_argument(
-        '--title', dest='title', help='set gallery title on the website'
-    )
-
-    # First positional argument.
-    parser.add_argument('destination_path')
-
-    # Remaining positional arguments (at least one), as a list.
-    parser.add_argument('full_image_filenames', nargs='+')
-
-    return parser.parse_args()
-
-
-# -------------------------------------------------------------------- #
 
 
 def handle_duplicate_filenames(paths):
@@ -331,15 +254,3 @@ def find_duplicate_filenames(paths):
         d[key].append(path)
 
     return filter(lambda x: len(x[1]) > 1, d.items())
-
-
-# -------------------------------------------------------------------- #
-
-
-def main():
-    try:
-        args = parse_args()
-        handle_duplicate_filenames(args.full_image_filenames)
-        Gallery.from_args(args).generate()
-    except KeyboardInterrupt:
-        sys.exit('Ctrl-C pressed, aborting.')

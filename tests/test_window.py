@@ -5,7 +5,7 @@
 
 import pytest
 
-from gallerize import window
+from gallerize.main import window
 
 
 @pytest.mark.parametrize(
