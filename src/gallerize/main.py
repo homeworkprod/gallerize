@@ -231,14 +231,17 @@ class Image:
 
 
 def handle_duplicate_filenames(paths):
-    duplicates = list(find_duplicate_filenames(paths))
-    if duplicates:
-        print('Found duplicate filenames:')
-        for filename, paths in duplicates:
-            print(f'  + "{filename}" appears in the following paths:')
-            for path in paths:
-                print(f'    - {path}')
-        sys.exit('Clashing target filenames, aborting.')
+    duplicates = find_duplicate_filenames(paths)
+    if not duplicates:
+        return
+
+    print('Found duplicate filenames:')
+    for filename, paths in duplicates:
+        print(f'  + "{filename}" appears in the following paths:')
+        for path in paths:
+            print(f'    - {path}')
+
+    sys.exit('Clashing target filenames, aborting.')
 
 
 def find_duplicate_filenames(paths):
@@ -247,4 +250,4 @@ def find_duplicate_filenames(paths):
         key = os.path.basename(path).lower()
         d[key].append(path)
 
-    return filter(lambda x: len(x[1]) > 1, d.items())
+    return [item for item in d.items() if len(item[1]) > 1]
