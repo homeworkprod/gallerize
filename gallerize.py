@@ -25,6 +25,8 @@ import sys
 from jinja2 import Environment, FileSystemLoader
 
 
+VERSION = '0.4-dev'
+
 ARGS_DEFAULT_MAX_IMAGE_SIZE = '1024x1024'
 ARGS_DEFAULT_MAX_THUMBNAIL_SIZE = '120x120'
 
