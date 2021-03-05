@@ -9,11 +9,10 @@ from gallerize.main import window
 
 
 @pytest.mark.parametrize(
-    ('iterable', 'n', 'expected'),
+    ('iterable', 'expected'),
     [
         (
             [1, 2, 3, 4, 5, 6, 7],
-            3,
             [
                 (1, 2, 3),
                 (2, 3, 4),
@@ -23,15 +22,14 @@ from gallerize.main import window
             ],
         ),
         (
-            [1, 2, 3, 4, 5, 6],
-            4,
+            [None, 1, 2, 3, None],
             [
-                (1, 2, 3, 4),
-                (2, 3, 4, 5),
-                (3, 4, 5, 6),
+                (None, 1, 2),
+                (1, 2, 3),
+                (2, 3, None),
             ],
         ),
     ],
 )
-def test_window(iterable, n, expected):
-    assert list(window(iterable, n)) == expected
+def test_window(iterable, expected):
+    assert list(window(iterable)) == expected

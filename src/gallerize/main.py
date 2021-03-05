@@ -87,7 +87,7 @@ class Gallery:
     def link_images(self):
         """Assign the predecessor and successor for every image."""
         for previous_image, image, next_image in window(
-            [None] + self.images + [None], 3
+            [None] + self.images + [None]
         ):
             image.previous_image = previous_image
             image.next_image = next_image
@@ -147,8 +147,13 @@ class Gallery:
             )
 
 
-def window(iterable, n):
-    """Return a sliding window of width ``n`` over the iterable."""
+def window(iterable):
+    """Return a sliding window over the iterable.
+
+    Returns a triple. Its first and third element can be `None`, but the
+    second element never is.
+    """
+    n = 3
     it = iter(iterable)
     result = tuple(islice(it, n))
     if len(result) == n:
