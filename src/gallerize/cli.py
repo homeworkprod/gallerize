@@ -12,11 +12,11 @@ import sys
 from .main import Dimension, Gallery, handle_duplicate_filenames
 
 
-ARGS_DEFAULT_MAX_IMAGE_SIZE = '1024x1024'
-ARGS_DEFAULT_MAX_THUMBNAIL_SIZE = '120x120'
+ARGS_DEFAULT_MAX_IMAGE_SIZE: str = '1024x1024'
+ARGS_DEFAULT_MAX_THUMBNAIL_SIZE: str = '120x120'
 
 
-def parse_dimension_arg(value):
+def parse_dimension_arg(value: str) -> Dimension:
     """Validate a dimension value."""
     try:
         return Dimension(*map(int, value.split('x', 1)))

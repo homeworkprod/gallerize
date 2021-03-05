@@ -12,6 +12,8 @@ Unreleased
 
 - Turn single module into package.
 
+- Added type hints.
+
 - Tweak HTML and CSS.
 
 
