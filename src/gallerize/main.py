@@ -86,9 +86,7 @@ class Gallery:
 
     def link_images(self):
         """Assign the predecessor and successor for every image."""
-        for previous_image, image, next_image in window(
-            [None] + self.images + [None]
-        ):
+        for previous_image, image, next_image in window(self.images):
             image.previous_image = previous_image
             image.next_image = next_image
 
@@ -154,6 +152,7 @@ def window(iterable):
     second element never is.
     """
     n = 3
+    iterable = [None] + iterable + [None]
     it = iter(iterable)
     result = tuple(islice(it, n))
     if len(result) == n:
