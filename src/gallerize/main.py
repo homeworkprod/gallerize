@@ -137,8 +137,6 @@ class Gallery:
             os.mkdir(self.destination_path)
 
         self.generate_images()
-        for image in self.images:
-            image.load_caption()
         self.render_html_pages()
         self.copy_additional_static_files()
         debug('Done.')
