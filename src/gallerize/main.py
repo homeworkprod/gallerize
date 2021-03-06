@@ -24,7 +24,6 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
-    Type,
 )
 
 from jinja2 import Environment, PackageLoader
@@ -83,24 +82,31 @@ def write_file(filename: str, content: str) -> None:
         f.write(content)
 
 
+def create_gallery(
+    title: str,
+    destination_path: str,
+    resize: bool,
+    max_image_size: Dimension,
+    max_thumbnail_size: Dimension,
+    full_image_filenames: List[str],
+) -> Gallery:
+    gallery = Gallery(
+        title=title,
+        destination_path=destination_path,
+        resize=resize,
+        max_image_size=max_image_size,
+        max_thumbnail_size=max_thumbnail_size,
+    )
+
+    gallery.images = [
+        Image(gallery, image) for image in sorted(full_image_filenames)
+    ]
+    gallery.link_images()
+
+    return gallery
+
+
 class Gallery:
-    @classmethod
-    def from_args(cls: Type[Gallery], args) -> Gallery:
-        gallery = Gallery(
-            title=args.title,
-            destination_path=args.destination_path,
-            resize=not args.no_resize,
-            max_image_size=args.max_image_size,
-            max_thumbnail_size=args.max_thumbnail_size,
-        )
-
-        gallery.images = [
-            Image(gallery, image) for image in sorted(args.full_image_filenames)
-        ]
-        gallery.link_images()
-
-        return gallery
-
     def __init__(
         self,
         title: str,
