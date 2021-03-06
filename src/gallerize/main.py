@@ -143,13 +143,13 @@ class Gallery:
 
     def generate_images(self) -> None:
         for image in self.images:
-            image.generate_image()
-            image.generate_thumbnail()
-            image.load_caption()
+            generate_image(image, self)
+            generate_thumbnail(image, self)
+            image.caption = load_caption(image)
 
     def render_html_pages(self) -> None:
         for image in self.images:
-            image.render_html_page()
+            render_html_page(image, self.destination_path)
         self.render_html_index_page()
 
     def render_html_index_page(self) -> None:
@@ -215,61 +215,62 @@ class Image:
         self.previous_image: Optional[Image] = None
         self.next_image: Optional[Image] = None
 
-    def generate_image(self) -> None:
-        """Create a (optionally resized) copy of an image."""
-        destination_filename = os.path.join(
-            self.gallery.destination_path, self.filename
-        )
-        if self.gallery.resize:
-            # Resize image.
-            debug('Resizing image "{}" ...', self.full_filename)
-            resize_image(
-                self.full_filename,
-                destination_filename,
-                self.gallery.max_image_size,
-            )
-        else:
-            # Copy image.
-            debug('Copying image "{}" ...', self.full_filename)
-            shutil.copy(self.full_filename, destination_filename)
 
-    def generate_thumbnail(self) -> None:
-        """Create a preview of an image."""
-        debug('Creating thumbnail "{}" ...', self.thumbnail_filename)
-        destination_filename = os.path.join(
-            self.gallery.destination_path, self.thumbnail_filename
-        )
+def generate_image(image: Image, gallery: Gallery) -> None:
+    """Create a (optionally resized) copy of an image."""
+    destination_filename = os.path.join(
+        gallery.destination_path, image.filename
+    )
+    if gallery.resize:
+        # Resize image.
+        debug('Resizing image "{}" ...', image.full_filename)
         resize_image(
-            self.full_filename,
+            image.full_filename,
             destination_filename,
-            self.gallery.max_thumbnail_size,
+            gallery.max_image_size,
         )
+    else:
+        # Copy image.
+        debug('Copying image "{}" ...', image.full_filename)
+        shutil.copy(image.full_filename, destination_filename)
 
-    def load_caption(self) -> None:
-        """Load image caption from file."""
-        caption_filename = os.path.join(
-            self.path, self.filename + IMAGE_CAPTION_EXTENSION
-        )
-        self.caption = self._read_first_line(caption_filename)
 
-    def _read_first_line(self, filename: str) -> Optional[str]:
-        """Read the first line from the specified file."""
-        try:
-            text = Path(filename).read_text(encoding='utf-8')
-            first_line = text.splitlines()[0]
-            return first_line.strip()
-        except IOError:
-            # File does not exist (OK) or cannot be read (not really OK).
-            return None
+def generate_thumbnail(image: Image, gallery: Gallery) -> None:
+    """Create a preview of an image."""
+    debug('Creating thumbnail "{}" ...', image.thumbnail_filename)
+    destination_filename = os.path.join(
+        gallery.destination_path, image.thumbnail_filename
+    )
+    resize_image(
+        image.full_filename,
+        destination_filename,
+        gallery.max_thumbnail_size,
+    )
 
-    def render_html_page(self) -> None:
-        """Create an HTML document for a single image."""
-        context = {
-            'image': self,
-        }
-        render_html_to_file(
-            'view', context, self.gallery.destination_path, self.page_name
-        )
+
+def load_caption(image: Image) -> str:
+    """Load image caption from file."""
+    caption_filename = os.path.join(
+        image.path, image.filename + IMAGE_CAPTION_EXTENSION
+    )
+    return _read_first_line(caption_filename)
+
+
+def _read_first_line(filename: str) -> Optional[str]:
+    """Read the first line from the specified file."""
+    try:
+        text = Path(filename).read_text(encoding='utf-8')
+        first_line = text.splitlines()[0]
+        return first_line.strip()
+    except IOError:
+        # File does not exist (OK) or cannot be read (not really OK).
+        return None
+
+
+def render_html_page(image: Image, destination_path: str) -> None:
+    """Create an HTML document for a single image."""
+    context = {'image': image}
+    render_html_to_file('view', context, destination_path, image.page_name)
 
 
 # -------------------------------------------------------------------- #
