@@ -99,7 +99,7 @@ def create_gallery(
     )
 
     gallery.images = [
-        create_image(gallery, image) for image in sorted(full_image_filenames)
+        create_image(image) for image in sorted(full_image_filenames)
     ]
     link_images(gallery.images)
 
@@ -204,7 +204,6 @@ def window(
 
 @dataclass
 class Image:
-    gallery: Gallery
     full_filename: str
     path: str
     filename: str
@@ -214,13 +213,12 @@ class Image:
     next_image: Optional[Image] = None
 
 
-def create_image(gallery: Gallery, full_filename: str) -> Image:
+def create_image(full_filename: str) -> Image:
     path, filename = os.path.split(full_filename)
     basename, extension = os.path.splitext(filename)
     thumbnail_filename = f'{basename}_t{extension}'
 
     return Image(
-        gallery=gallery,
         full_filename=full_filename,
         path=path,
         filename=filename,
