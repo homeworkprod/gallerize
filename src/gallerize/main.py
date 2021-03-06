@@ -8,7 +8,6 @@ gallerize.main
 
 from __future__ import annotations
 from collections import defaultdict
-import dataclasses
 from dataclasses import dataclass
 from itertools import islice
 import os
@@ -90,30 +89,27 @@ def create_gallery(
     max_thumbnail_size: Dimension,
     full_image_filenames: List[str],
 ) -> Gallery:
-    gallery = Gallery(
+    images = [create_image(image) for image in sorted(full_image_filenames)]
+    link_images(images)
+
+    return Gallery(
         title=title,
         destination_path=destination_path,
         resize=resize,
         max_image_size=max_image_size,
         max_thumbnail_size=max_thumbnail_size,
+        images=images,
     )
 
-    gallery.images = [
-        create_image(image) for image in sorted(full_image_filenames)
-    ]
-    link_images(gallery.images)
 
-    return gallery
-
-
-@dataclass
+@dataclass(frozen=True)
 class Gallery:
     title: str
     destination_path: str
     resize: bool
     max_image_size: Dimension
     max_thumbnail_size: Dimension
-    images: List[Image] = dataclasses.field(default_factory=list)
+    images: List[Image]
 
 
 def link_images(images: List[Image]) -> None:
