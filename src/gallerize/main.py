@@ -259,7 +259,7 @@ class Image:
         """Read the first line from the specified file."""
         try:
             with codecs.open(filename, 'rb', 'utf-8') as f:
-                return f.next().strip()
+                return next(f).strip()
         except IOError:
             # File does not exist (OK) or cannot be read (not really OK).
             return None
