@@ -8,6 +8,7 @@ gallerize.main
 
 from __future__ import annotations
 from collections import defaultdict
+import dataclasses
 from dataclasses import dataclass
 from itertools import islice
 import os
@@ -105,21 +106,14 @@ def create_gallery(
     return gallery
 
 
+@dataclass
 class Gallery:
-    def __init__(
-        self,
-        title: str,
-        destination_path: str,
-        resize: bool,
-        max_image_size: Dimension,
-        max_thumbnail_size: Dimension,
-    ) -> None:
-        self.images: List[Image] = []
-        self.title = title
-        self.destination_path = destination_path
-        self.resize = resize
-        self.max_image_size = max_image_size
-        self.max_thumbnail_size = max_thumbnail_size
+    title: str
+    destination_path: str
+    resize: bool
+    max_image_size: Dimension
+    max_thumbnail_size: Dimension
+    images: List[Image] = dataclasses.field(default_factory=list)
 
 
 def link_images(images: List[Image]) -> None:
@@ -208,24 +202,16 @@ def window(
         yield result  # type: ignore
 
 
+@dataclass
 class Image:
-    def __init__(
-        self,
-        gallery: Gallery,
-        full_filename: str,
-        path: str,
-        filename: str,
-        thumbnail_filename: str,
-        page_name: str,
-    ) -> None:
-        self.gallery = gallery
-        self.full_filename = full_filename
-        self.path = path
-        self.filename = filename
-        self.thumbnail_filename = thumbnail_filename
-        self.page_name = page_name
-        self.previous_image: Optional[Image] = None
-        self.next_image: Optional[Image] = None
+    gallery: Gallery
+    full_filename: str
+    path: str
+    filename: str
+    thumbnail_filename: str
+    page_name: str
+    previous_image: Optional[Image] = None
+    next_image: Optional[Image] = None
 
 
 def create_image(gallery: Gallery, full_filename: str) -> Image:
