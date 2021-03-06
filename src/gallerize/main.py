@@ -98,7 +98,7 @@ def create_gallery(
     )
 
     gallery.images = [
-        Image(gallery, image) for image in sorted(full_image_filenames)
+        create_image(gallery, image) for image in sorted(full_image_filenames)
     ]
     link_images(gallery.images)
 
@@ -209,15 +209,38 @@ def window(
 
 
 class Image:
-    def __init__(self, gallery: Gallery, full_filename: str) -> None:
+    def __init__(
+        self,
+        gallery: Gallery,
+        full_filename: str,
+        path: str,
+        filename: str,
+        thumbnail_filename: str,
+        page_name: str,
+    ) -> None:
         self.gallery = gallery
         self.full_filename = full_filename
-        self.path, self.filename = os.path.split(full_filename)
-        self.basename, self.extension = os.path.splitext(self.filename)
-        self.thumbnail_filename = f'{self.basename}_t{self.extension}'
-        self.page_name = self.basename
+        self.path = path
+        self.filename = filename
+        self.thumbnail_filename = thumbnail_filename
+        self.page_name = page_name
         self.previous_image: Optional[Image] = None
         self.next_image: Optional[Image] = None
+
+
+def create_image(gallery: Gallery, full_filename: str) -> Image:
+    path, filename = os.path.split(full_filename)
+    basename, extension = os.path.splitext(filename)
+    thumbnail_filename = f'{basename}_t{extension}'
+
+    return Image(
+        gallery=gallery,
+        full_filename=full_filename,
+        path=path,
+        filename=filename,
+        thumbnail_filename=thumbnail_filename,
+        page_name=basename,
+    )
 
 
 def generate_image(image: Image, gallery: Gallery) -> None:
