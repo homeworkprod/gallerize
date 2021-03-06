@@ -7,11 +7,11 @@ gallerize.main
 """
 
 from __future__ import annotations
-import codecs
 from collections import defaultdict
 from dataclasses import dataclass
 from itertools import islice
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
@@ -77,9 +77,8 @@ def render_template(template_filename: str, **context: Dict[str, Any]) -> str:
 
 
 def write_file(filename: str, content: str) -> None:
-    with codecs.open(filename, 'w', 'utf-8') as f:
-        debug('Writing "{}" ...', filename)
-        f.write(content)
+    debug('Writing "{}" ...', filename)
+    Path(filename).write_text(content, encoding='utf-8')
 
 
 def create_gallery(
@@ -258,8 +257,9 @@ class Image:
     def _read_first_line(self, filename: str) -> Optional[str]:
         """Read the first line from the specified file."""
         try:
-            with codecs.open(filename, 'rb', 'utf-8') as f:
-                return next(f).strip()
+            text = Path(filename).read_text(encoding='utf-8')
+            first_line = text.splitlines()[0]
+            return first_line.strip()
         except IOError:
             # File does not exist (OK) or cannot be read (not really OK).
             return None
