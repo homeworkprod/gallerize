@@ -9,7 +9,12 @@ gallerize.cli
 import argparse
 import sys
 
-from .main import create_gallery, Dimension, handle_duplicate_filenames
+from .main import (
+    create_gallery,
+    Dimension,
+    generate_gallery,
+    handle_duplicate_filenames,
+)
 
 
 ARGS_DEFAULT_MAX_IMAGE_SIZE: str = '1024x1024'
@@ -91,6 +96,6 @@ def main():
             max_thumbnail_size=args.max_thumbnail_size,
             full_image_filenames=args.full_image_filenames,
         )
-        gallery.generate()
+        generate_gallery(gallery)
     except KeyboardInterrupt:
         sys.exit('Ctrl-C pressed, aborting.')

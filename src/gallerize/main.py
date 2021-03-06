@@ -100,7 +100,7 @@ def create_gallery(
     gallery.images = [
         Image(gallery, image) for image in sorted(full_image_filenames)
     ]
-    gallery.link_images()
+    link_images(gallery.images)
 
     return gallery
 
@@ -121,63 +121,67 @@ class Gallery:
         self.max_image_size = max_image_size
         self.max_thumbnail_size = max_thumbnail_size
 
-    def link_images(self) -> None:
-        """Assign the predecessor and successor for every image."""
-        for previous_image, image, next_image in window(self.images):
-            image.previous_image = previous_image
-            image.next_image = next_image
 
-    def generate(self) -> None:
-        # Create destination path if it doesn't exist.
-        if not os.path.exists(self.destination_path):
-            debug(
-                'Destination path "{}" does not exist, creating it.',
-                self.destination_path,
-            )
-            os.mkdir(self.destination_path)
+def link_images(images: List[Image]) -> None:
+    """Assign the predecessor and successor for every image."""
+    for previous_image, image, next_image in window(images):
+        image.previous_image = previous_image
+        image.next_image = next_image
 
-        self.generate_images()
-        self.render_html_pages()
-        self.copy_additional_static_files()
-        debug('Done.')
 
-    def generate_images(self) -> None:
-        for image in self.images:
-            generate_image(image, self)
-            generate_thumbnail(image, self)
-            image.caption = load_caption(image)
+def generate_gallery(gallery: Gallery) -> None:
+    # Create destination path if it doesn't exist.
+    if not os.path.exists(gallery.destination_path):
+        debug(
+            'Destination path "{}" does not exist, creating it.',
+            gallery.destination_path,
+        )
+        os.mkdir(gallery.destination_path)
 
-    def render_html_pages(self) -> None:
-        for image in self.images:
-            render_html_page(image, self.destination_path)
-        self.render_html_index_page()
+    generate_images(gallery)
+    render_html_pages(gallery)
+    copy_additional_static_files(gallery.destination_path)
+    debug('Done.')
 
-    def render_html_index_page(self) -> None:
-        """Create an HTML document of thumbnails that link to single image
-        documents.
-        """
-        context = {
-            'gallery': self,
-        }
-        render_html_to_file('index', context, self.destination_path, 'index')
 
-    def copy_additional_static_files(self) -> None:
-        if not os.path.exists(PATH_STATIC):
-            debug(
-                'Path "{}", does not exist; not copying any static files.',
-                PATH_STATIC,
-            )
-            return
+def generate_images(gallery: Gallery) -> None:
+    for image in gallery.images:
+        generate_image(image, gallery)
+        generate_thumbnail(image, gallery)
+        image.caption = load_caption(image)
 
-        filenames = list(sorted(os.listdir(PATH_STATIC)))
-        if not filenames:
-            debug('No static files to copy.')
-        for filename in filenames:
-            debug('Copying static file "{}" ...', filename)
-            shutil.copy(
-                os.path.join(PATH_STATIC, filename),
-                os.path.join(self.destination_path, filename),
-            )
+
+def render_html_pages(gallery: Gallery) -> None:
+    for image in gallery.images:
+        render_html_page(image, gallery.destination_path)
+    render_html_index_page(gallery)
+
+
+def render_html_index_page(gallery: Gallery) -> None:
+    """Create an HTML document of thumbnails that link to single image
+    documents.
+    """
+    context = {'gallery': gallery}
+    render_html_to_file('index', context, gallery.destination_path, 'index')
+
+
+def copy_additional_static_files(destination_path: str) -> None:
+    if not os.path.exists(PATH_STATIC):
+        debug(
+            'Path "{}", does not exist; not copying any static files.',
+            PATH_STATIC,
+        )
+        return
+
+    filenames = list(sorted(os.listdir(PATH_STATIC)))
+    if not filenames:
+        debug('No static files to copy.')
+    for filename in filenames:
+        debug('Copying static file "{}" ...', filename)
+        shutil.copy(
+            os.path.join(PATH_STATIC, filename),
+            os.path.join(destination_path, filename),
+        )
 
 
 def window(
