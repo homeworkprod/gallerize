@@ -147,7 +147,7 @@ def generate_images(gallery: Gallery) -> None:
 
 def render_html_pages(gallery: Gallery) -> None:
     for image in gallery.images:
-        render_html_page(image, gallery.destination_path)
+        render_html_page(gallery, image)
     render_html_index_page(gallery)
 
 
@@ -280,10 +280,12 @@ def _read_first_line(filename: str) -> Optional[str]:
         return None
 
 
-def render_html_page(image: Image, destination_path: str) -> None:
+def render_html_page(gallery: Gallery, image: Image) -> None:
     """Create an HTML document for a single image."""
-    context = {'image': image}
-    render_html_to_file('view', context, destination_path, image.page_name)
+    context = {'gallery': gallery, 'image': image}
+    render_html_to_file(
+        'view', context, gallery.destination_path, image.page_name
+    )
 
 
 # -------------------------------------------------------------------- #

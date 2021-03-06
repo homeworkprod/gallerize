@@ -1,6 +1,6 @@
 {% extends "_layout.html" %}
 
-{% set gallery_title = image.gallery.title %}
+{% set gallery_title = gallery.title %}
 
 {% block head_additions %}
     <link rel="up" href="{{ url_for_page('index') }}">
@@ -15,8 +15,8 @@
 {% block body %}
 
     <header>
-      {% if image.gallery.title is not none %}
-      <p>{{ image.gallery.title }}</p>
+      {% if gallery.title is not none %}
+      <p>{{ gallery.title }}</p>
       {% endif %}
       <h1>{{ image.filename }}</h1>
     </header>
