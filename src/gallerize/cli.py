@@ -9,6 +9,7 @@ gallerize.cli
 import argparse
 import sys
 
+from . import VERSION
 from .main import (
     create_gallery,
     Dimension,
@@ -73,6 +74,10 @@ def parse_args():
 
     parser.add_argument(
         '--title', dest='title', help='set gallery title on the website'
+    )
+
+    parser.add_argument(
+        '--version', action='version', version=f'gallerize {VERSION}'
     )
 
     # First positional argument.
