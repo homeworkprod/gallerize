@@ -285,7 +285,7 @@ def render_html_page(gallery: Gallery, image: Image) -> None:
 # -------------------------------------------------------------------- #
 
 
-def handle_duplicate_filenames(paths) -> None:
+def handle_duplicate_filenames(paths: Iterable[str]) -> None:
     duplicates = find_duplicate_filenames(paths)
     if not duplicates:
         return
