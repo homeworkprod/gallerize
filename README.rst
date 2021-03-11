@@ -21,7 +21,7 @@ Requirements
 ============
 
 - Python_ 3.7+
-- Jinja_ (tested with 2.7.1)
+- Jinja_
 - ImageMagick_ (tested with 6.6.9-7)
 
 
