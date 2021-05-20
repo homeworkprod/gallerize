@@ -13,26 +13,18 @@ import os
 import shutil
 import subprocess
 import sys
-from typing import Any, Iterable, Iterator, Optional, Sequence
-
-from jinja2 import Environment, PackageLoader
+from typing import Iterable, Iterator, Optional
 
 from .files import find_duplicate_filenames, read_first_line, write_file
+from .html import render_html_pages
 from .logging import debug
 from .models import Dimension, Gallery, Image
 
 
 IMAGE_CAPTION_EXTENSION: str = '.txt'
-TEMPLATE_EXTENSION: str = '.html'
-OUTPUT_HTML_EXTENSION: str = '.html'
 
 PATH: str = os.path.dirname(os.path.abspath(__file__))
 PATH_STATIC: str = os.path.join(PATH, 'static')
-TEMPLATE_ENVIRONMENT: Environment = Environment(
-    autoescape=True,
-    loader=PackageLoader(__package__, 'templates'),
-    trim_blocks=False,
-)
 
 
 def resize_image(
@@ -42,21 +34,6 @@ def resize_image(
     dimension_str = f'{max_dimension.width:d}x{max_dimension.height:d}'
     cmd = ['convert', '-resize', dimension_str, src_filename, dst_filename]
     subprocess.check_call(cmd)
-
-
-def render_html_to_file(
-    template_name: str, context: dict[str, Any], path: str, page_name: str
-) -> None:
-    """Render the template and write the result to the given file."""
-    context['url_for_page'] = lambda page: page + OUTPUT_HTML_EXTENSION
-    html = render_template(template_name + TEMPLATE_EXTENSION, **context)
-
-    filename = os.path.join(path, page_name + OUTPUT_HTML_EXTENSION)
-    write_file(filename, html)
-
-
-def render_template(template_filename: str, **context: dict[str, Any]) -> str:
-    return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
 
 
 def create_gallery(
@@ -119,20 +96,6 @@ def generate_images(gallery: Gallery) -> None:
     for image in gallery.images:
         generate_image(image, gallery)
         generate_thumbnail(image, gallery)
-
-
-def render_html_pages(gallery: Gallery) -> None:
-    for image in gallery.images:
-        render_html_page(gallery, image)
-    render_html_index_page(gallery)
-
-
-def render_html_index_page(gallery: Gallery) -> None:
-    """Create an HTML document of thumbnails that link to single image
-    documents.
-    """
-    context = {'gallery': gallery}
-    render_html_to_file('index', context, gallery.destination_path, 'index')
 
 
 def copy_additional_static_files(destination_path: str) -> None:
@@ -230,14 +193,6 @@ def load_caption(image: Image) -> Optional[str]:
         image.path, image.filename + IMAGE_CAPTION_EXTENSION
     )
     return read_first_line(caption_filename)
-
-
-def render_html_page(gallery: Gallery, image: Image) -> None:
-    """Create an HTML document for a single image."""
-    context = {'gallery': gallery, 'image': image}
-    render_html_to_file(
-        'view', context, gallery.destination_path, image.page_name
-    )
 
 
 # -------------------------------------------------------------------- #
