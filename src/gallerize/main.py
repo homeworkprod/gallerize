@@ -109,6 +109,8 @@ def copy_additional_static_files(destination_path: str) -> None:
     filenames = list(sorted(os.listdir(PATH_STATIC)))
     if not filenames:
         debug('No static files to copy.')
+        return
+
     for filename in filenames:
         debug('Copying static file "{}" ...', filename)
         shutil.copy(
