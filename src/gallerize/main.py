@@ -205,6 +205,7 @@ class Image:
     filename: str
     thumbnail_filename: str
     page_name: str
+    caption: Optional[str] = None
     previous_image: Optional[Image] = None
     next_image: Optional[Image] = None
 
@@ -255,7 +256,7 @@ def generate_thumbnail(image: Image, gallery: Gallery) -> None:
     )
 
 
-def load_caption(image: Image) -> str:
+def load_caption(image: Image) -> Optional[str]:
     """Load image caption from file."""
     caption_filename = os.path.join(
         image.path, image.filename + IMAGE_CAPTION_EXTENSION
