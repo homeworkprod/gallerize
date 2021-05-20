@@ -9,7 +9,6 @@ gallerize.main
 from __future__ import annotations
 from collections import defaultdict
 import dataclasses
-from dataclasses import dataclass
 from itertools import islice
 import os
 from pathlib import Path
@@ -19,6 +18,8 @@ import sys
 from typing import Any, Iterable, Iterator, Optional, Sequence
 
 from jinja2 import Environment, PackageLoader
+
+from .models import Dimension, Gallery, Image
 
 
 IMAGE_CAPTION_EXTENSION: str = '.txt'
@@ -32,12 +33,6 @@ TEMPLATE_ENVIRONMENT: Environment = Environment(
     loader=PackageLoader(__package__, 'templates'),
     trim_blocks=False,
 )
-
-
-@dataclass(frozen=True)
-class Dimension:
-    width: int
-    height: int
 
 
 def debug(message: str, *args: Any) -> None:
@@ -92,16 +87,6 @@ def create_gallery(
         max_thumbnail_size=max_thumbnail_size,
         images=images,
     )
-
-
-@dataclass(frozen=True)
-class Gallery:
-    title: str
-    destination_path: str
-    resize: bool
-    max_image_size: Dimension
-    max_thumbnail_size: Dimension
-    images: list[Image]
 
 
 def link_images(images: list[Image]) -> Iterator[Image]:
@@ -200,18 +185,6 @@ def window(
     for elem in it:
         result = result[1:] + (elem,)
         yield result  # type: ignore
-
-
-@dataclass(frozen=True)
-class Image:
-    full_filename: str
-    path: str
-    filename: str
-    thumbnail_filename: str
-    page_name: str
-    caption: Optional[str] = None
-    previous_image: Optional[Image] = None
-    next_image: Optional[Image] = None
 
 
 def create_image(full_filename: str) -> Image:

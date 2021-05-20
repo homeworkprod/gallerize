@@ -10,12 +10,8 @@ import argparse
 import sys
 
 from . import VERSION
-from .main import (
-    create_gallery,
-    Dimension,
-    generate_gallery,
-    handle_duplicate_filenames,
-)
+from .main import create_gallery, generate_gallery, handle_duplicate_filenames
+from .models import Dimension
 
 
 ARGS_DEFAULT_MAX_IMAGE_SIZE: str = '1024x1024'
