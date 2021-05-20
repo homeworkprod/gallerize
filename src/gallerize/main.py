@@ -8,6 +8,7 @@ gallerize.main
 
 from __future__ import annotations
 from collections import defaultdict
+import dataclasses
 from dataclasses import dataclass
 from itertools import islice
 import os
@@ -81,7 +82,7 @@ def create_gallery(
     full_image_filenames: list[str],
 ) -> Gallery:
     images = [create_image(image) for image in sorted(full_image_filenames)]
-    link_images(images)
+    images = list(link_images(images))
 
     return Gallery(
         title=title,
@@ -103,11 +104,14 @@ class Gallery:
     images: list[Image]
 
 
-def link_images(images: list[Image]) -> None:
+def link_images(images: list[Image]) -> Iterator[Image]:
     """Assign the predecessor and successor for every image."""
     for previous_image, image, next_image in window(images):
-        image.previous_image = previous_image
-        image.next_image = next_image
+        yield dataclasses.replace(
+            image,
+            previous_image=previous_image,
+            next_image=next_image,
+        )
 
 
 def generate_gallery(gallery: Gallery) -> None:
@@ -119,17 +123,26 @@ def generate_gallery(gallery: Gallery) -> None:
         )
         os.mkdir(gallery.destination_path)
 
+    gallery = add_image_captions(gallery)
     generate_images(gallery)
     render_html_pages(gallery)
     copy_additional_static_files(gallery.destination_path)
     debug('Done.')
 
 
+def add_image_captions(gallery: Gallery) -> Gallery:
+    captioned_images = [
+        dataclasses.replace(image, caption=load_caption(image))
+        for image in gallery.images
+    ]
+
+    return dataclasses.replace(gallery, images=captioned_images)
+
+
 def generate_images(gallery: Gallery) -> None:
     for image in gallery.images:
         generate_image(image, gallery)
         generate_thumbnail(image, gallery)
-        image.caption = load_caption(image)
 
 
 def render_html_pages(gallery: Gallery) -> None:
@@ -189,7 +202,7 @@ def window(
         yield result  # type: ignore
 
 
-@dataclass
+@dataclass(frozen=True)
 class Image:
     full_filename: str
     path: str
