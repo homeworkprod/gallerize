@@ -7,6 +7,7 @@ gallerize.cli
 """
 
 import argparse
+from pathlib import Path
 import sys
 
 from . import VERSION
@@ -77,10 +78,10 @@ def parse_args():
     )
 
     # First positional argument.
-    parser.add_argument('destination_path')
+    parser.add_argument('destination_path', type=Path)
 
     # Remaining positional arguments (at least one), as a list.
-    parser.add_argument('full_image_filenames', nargs='+')
+    parser.add_argument('full_image_filenames', type=Path, nargs='+')
 
     return parser.parse_args()
 

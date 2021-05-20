@@ -10,7 +10,6 @@ Generic file utilities
 
 from __future__ import annotations
 from collections import defaultdict
-import os.path
 from pathlib import Path
 from typing import Iterable, Optional
 
@@ -18,20 +17,20 @@ from .logging import debug
 
 
 def find_duplicate_filenames(
-    paths: Iterable[str],
-) -> list[tuple[str, list[str]]]:
+    paths: Iterable[Path],
+) -> list[tuple[str, list[Path]]]:
     d = defaultdict(list)
     for path in paths:
-        key = os.path.basename(path).lower()
+        key = path.name.lower()
         d[key].append(path)
 
     return [item for item in d.items() if len(item[1]) > 1]
 
 
-def read_first_line(filename: str) -> Optional[str]:
+def read_first_line(filename: Path) -> Optional[str]:
     """Read the first line from the specified file."""
     try:
-        text = Path(filename).read_text(encoding='utf-8')
+        text = filename.read_text(encoding='utf-8')
         first_line = text.splitlines()[0]
         return first_line.strip()
     except IOError:
@@ -39,6 +38,6 @@ def read_first_line(filename: str) -> Optional[str]:
         return None
 
 
-def write_file(filename: str, content: str) -> None:
+def write_file(filename: Path, content: str) -> None:
     debug('Writing "{}" ...', filename)
-    Path(filename).write_text(content, encoding='utf-8')
+    filename.write_text(content, encoding='utf-8')

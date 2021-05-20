@@ -3,6 +3,8 @@
 :License: MIT, see LICENSE for details.
 """
 
+from pathlib import Path
+
 import pytest
 
 from gallerize.main import find_duplicate_filenames
@@ -12,22 +14,31 @@ from gallerize.main import find_duplicate_filenames
     ('paths', 'expected'),
     [
         (
-            ['dir1/foo.txt', 'dir1/bar.txt', 'foo.txt', 'dir2/Foo.tXt'],
+            [
+                Path('dir1/foo.txt'),
+                Path('dir1/bar.txt'),
+                Path('foo.txt'),
+                Path('dir2/Foo.tXt'),
+            ],
             {
-                'foo.txt': ['dir1/foo.txt', 'foo.txt', 'dir2/Foo.tXt'],
+                'foo.txt': [
+                    Path('dir1/foo.txt'),
+                    Path('foo.txt'),
+                    Path('dir2/Foo.tXt'),
+                ],
             },
         ),
         (
             [
-                'xy/one.jpg',
-                'xy/two.jpg',
-                'xy/three.jpg',
-                'one.jpg',
-                'three.jpg',
+                Path('xy/one.jpg'),
+                Path('xy/two.jpg'),
+                Path('xy/three.jpg'),
+                Path('one.jpg'),
+                Path('three.jpg'),
             ],
             {
-                'one.jpg': ['xy/one.jpg', 'one.jpg'],
-                'three.jpg': ['xy/three.jpg', 'three.jpg'],
+                'one.jpg': [Path('xy/one.jpg'), Path('one.jpg')],
+                'three.jpg': [Path('xy/three.jpg'), Path('three.jpg')],
             },
         ),
     ],

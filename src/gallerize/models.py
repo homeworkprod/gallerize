@@ -8,6 +8,7 @@ gallerize.models
 
 from __future__ import annotations
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
 
 
@@ -19,8 +20,8 @@ class Dimension:
 
 @dataclass(frozen=True)
 class Image:
-    full_filename: str
-    path: str
+    full_filename: Path
+    path: Path
     filename: str
     thumbnail_filename: str
     page_name: str
@@ -32,7 +33,7 @@ class Image:
 @dataclass(frozen=True)
 class Gallery:
     title: str
-    destination_path: str
+    destination_path: Path
     resize: bool
     max_image_size: Dimension
     max_thumbnail_size: Dimension

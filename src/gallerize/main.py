@@ -9,7 +9,7 @@ gallerize.main
 from __future__ import annotations
 import dataclasses
 from itertools import islice
-import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
@@ -23,26 +23,31 @@ from .models import Dimension, Gallery, Image
 
 IMAGE_CAPTION_EXTENSION: str = '.txt'
 
-PATH: str = os.path.dirname(os.path.abspath(__file__))
-PATH_STATIC: str = os.path.join(PATH, 'static')
+PATH_STATIC: Path = Path(__file__).parent / 'static'
 
 
 def resize_image(
-    src_filename: str, dst_filename: str, max_dimension: Dimension
+    src_filename: Path, dst_filename: Path, max_dimension: Dimension
 ) -> None:
     """Create a resized (and antialiased) version of an image."""
     dimension_str = f'{max_dimension.width:d}x{max_dimension.height:d}'
-    cmd = ['convert', '-resize', dimension_str, src_filename, dst_filename]
+    cmd = [
+        'convert',
+        '-resize',
+        dimension_str,
+        str(src_filename),
+        str(dst_filename),
+    ]
     subprocess.check_call(cmd)
 
 
 def create_gallery(
     title: str,
-    destination_path: str,
+    destination_path: Path,
     resize: bool,
     max_image_size: Dimension,
     max_thumbnail_size: Dimension,
-    full_image_filenames: list[str],
+    full_image_filenames: list[Path],
 ) -> Gallery:
     images = [create_image(image) for image in sorted(full_image_filenames)]
     images = list(link_images(images))
@@ -69,12 +74,12 @@ def link_images(images: list[Image]) -> Iterator[Image]:
 
 def generate_gallery(gallery: Gallery) -> None:
     # Create destination path if it doesn't exist.
-    if not os.path.exists(gallery.destination_path):
+    if not gallery.destination_path.exists():
         debug(
             'Destination path "{}" does not exist, creating it.',
             gallery.destination_path,
         )
-        os.mkdir(gallery.destination_path)
+        gallery.destination_path.mkdir()
 
     gallery = add_image_captions(gallery)
     generate_images(gallery)
@@ -98,25 +103,24 @@ def generate_images(gallery: Gallery) -> None:
         generate_thumbnail(image, gallery)
 
 
-def copy_additional_static_files(destination_path: str) -> None:
-    if not os.path.exists(PATH_STATIC):
+def copy_additional_static_files(destination_path: Path) -> None:
+    if not PATH_STATIC.exists():
         debug(
             'Path "{}", does not exist; not copying any static files.',
             PATH_STATIC,
         )
         return
 
-    filenames = list(sorted(os.listdir(PATH_STATIC)))
+    filenames = list(sorted(PATH_STATIC.iterdir()))
     if not filenames:
         debug('No static files to copy.')
         return
 
     for filename in filenames:
         debug('Copying static file "{}" ...', filename)
-        shutil.copy(
-            os.path.join(PATH_STATIC, filename),
-            os.path.join(destination_path, filename),
-        )
+        source = PATH_STATIC / filename
+        destination = destination_path / filename
+        shutil.copy(source, destination_path)
 
 
 def window(
@@ -143,15 +147,16 @@ def window(
         yield result  # type: ignore
 
 
-def create_image(full_filename: str) -> Image:
-    path, filename = os.path.split(full_filename)
-    basename, extension = os.path.splitext(filename)
+def create_image(full_filename: Path) -> Image:
+    basename = full_filename.stem
+    extension = full_filename.suffix
+
     thumbnail_filename = f'{basename}_t{extension}'
 
     return Image(
         full_filename=full_filename,
-        path=path,
-        filename=filename,
+        path=full_filename.parent,
+        filename=full_filename.name,
         thumbnail_filename=thumbnail_filename,
         page_name=basename,
     )
@@ -159,9 +164,7 @@ def create_image(full_filename: str) -> Image:
 
 def generate_image(image: Image, gallery: Gallery) -> None:
     """Create a (optionally resized) copy of an image."""
-    destination_filename = os.path.join(
-        gallery.destination_path, image.filename
-    )
+    destination_filename = gallery.destination_path / image.filename
     if gallery.resize:
         # Resize image.
         debug('Resizing image "{}" ...', image.full_filename)
@@ -179,9 +182,7 @@ def generate_image(image: Image, gallery: Gallery) -> None:
 def generate_thumbnail(image: Image, gallery: Gallery) -> None:
     """Create a preview of an image."""
     debug('Creating thumbnail "{}" ...', image.thumbnail_filename)
-    destination_filename = os.path.join(
-        gallery.destination_path, image.thumbnail_filename
-    )
+    destination_filename = gallery.destination_path / image.thumbnail_filename
     resize_image(
         image.full_filename,
         destination_filename,
@@ -191,16 +192,14 @@ def generate_thumbnail(image: Image, gallery: Gallery) -> None:
 
 def load_caption(image: Image) -> Optional[str]:
     """Load image caption from file."""
-    caption_filename = os.path.join(
-        image.path, image.filename + IMAGE_CAPTION_EXTENSION
-    )
-    return read_first_line(caption_filename)
+    filename = image.path / (image.filename + IMAGE_CAPTION_EXTENSION)
+    return read_first_line(filename)
 
 
 # -------------------------------------------------------------------- #
 
 
-def handle_duplicate_filenames(paths: Iterable[str]) -> None:
+def handle_duplicate_filenames(paths: Iterable[Path]) -> None:
     duplicates = find_duplicate_filenames(paths)
     if not duplicates:
         return

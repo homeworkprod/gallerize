@@ -9,7 +9,7 @@ HTML rendering
 """
 
 from __future__ import annotations
-import os
+from pathlib import Path
 from typing import Any
 
 from jinja2 import Environment, PackageLoader
@@ -51,13 +51,13 @@ def render_html_index_page(gallery: Gallery) -> None:
 
 
 def render_html_to_file(
-    template_name: str, context: dict[str, Any], path: str, page_name: str
+    template_name: str, context: dict[str, Any], path: Path, page_name: str
 ) -> None:
     """Render the template and write the result to the given file."""
     context['url_for_page'] = lambda page: page + OUTPUT_HTML_EXTENSION
     html = render_template(template_name + TEMPLATE_EXTENSION, **context)
 
-    filename = os.path.join(path, page_name + OUTPUT_HTML_EXTENSION)
+    filename = path / (page_name + OUTPUT_HTML_EXTENSION)
     write_file(filename, html)
 
 
