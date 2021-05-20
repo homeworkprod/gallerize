@@ -45,9 +45,9 @@ def parse_args():
 
     parser.add_argument(
         '--no-resize',
-        dest='no_resize',
-        action='store_true',
-        default=False,
+        dest='resize',
+        action='store_false',
+        default=True,
         help='do not resize images, just copy them',
     )
 
@@ -93,7 +93,7 @@ def main():
         gallery = create_gallery(
             title=args.title,
             destination_path=args.destination_path,
-            resize=not args.no_resize,
+            resize=args.resize,
             max_image_size=args.max_image_size,
             max_thumbnail_size=args.max_thumbnail_size,
             full_image_filenames=args.full_image_filenames,
