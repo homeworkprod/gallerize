@@ -15,16 +15,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import (
-    Any,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
-    Sequence,
-    Tuple,
-)
+from typing import Any, Iterable, Iterator, Optional, Sequence
 
 from jinja2 import Environment, PackageLoader
 
@@ -62,7 +53,7 @@ def resize_image(
 
 
 def render_html_to_file(
-    template_name: str, context: Dict[str, Any], path: str, page_name: str
+    template_name: str, context: dict[str, Any], path: str, page_name: str
 ) -> None:
     """Render the template and write the result to the given file."""
     context['url_for_page'] = lambda page: page + OUTPUT_HTML_EXTENSION
@@ -72,7 +63,7 @@ def render_html_to_file(
     write_file(filename, html)
 
 
-def render_template(template_filename: str, **context: Dict[str, Any]) -> str:
+def render_template(template_filename: str, **context: dict[str, Any]) -> str:
     return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
 
 
@@ -87,7 +78,7 @@ def create_gallery(
     resize: bool,
     max_image_size: Dimension,
     max_thumbnail_size: Dimension,
-    full_image_filenames: List[str],
+    full_image_filenames: list[str],
 ) -> Gallery:
     images = [create_image(image) for image in sorted(full_image_filenames)]
     link_images(images)
@@ -109,10 +100,10 @@ class Gallery:
     resize: bool
     max_image_size: Dimension
     max_thumbnail_size: Dimension
-    images: List[Image]
+    images: list[Image]
 
 
-def link_images(images: List[Image]) -> None:
+def link_images(images: list[Image]) -> None:
     """Assign the predecessor and successor for every image."""
     for previous_image, image, next_image in window(images):
         image.previous_image = previous_image
@@ -176,14 +167,14 @@ def copy_additional_static_files(destination_path: str) -> None:
 
 def window(
     images: Iterable[Image],
-) -> Iterator[Tuple[Optional[Image], Image, Optional[Image]]]:
+) -> Iterator[tuple[Optional[Image], Image, Optional[Image]]]:
     """Return a sliding window over the images.
 
     Returns a triple. Its first and third element can be `None`, but the
     second element never is.
     """
     n = 3
-    padded_list: List[Optional[Image]] = list(images)
+    padded_list: list[Optional[Image]] = list(images)
     padded_list.insert(0, None)
     padded_list.append(None)
 
@@ -302,7 +293,7 @@ def handle_duplicate_filenames(paths: Iterable[str]) -> None:
 
 def find_duplicate_filenames(
     paths: Iterable[str],
-) -> List[Tuple[str, List[str]]]:
+) -> list[tuple[str, list[str]]]:
     d = defaultdict(list)
     for path in paths:
         key = os.path.basename(path).lower()
