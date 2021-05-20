@@ -12,11 +12,13 @@ Unreleased
 
 - Added command line option ``--version`` to show version number.
 
-- Turn single module into package.
+- Turned single module into package.
 
 - Added type hints.
 
-- Tweak HTML and CSS.
+- Tweaked HTML and CSS.
+
+- Updated Jinja to 3.0.1 (from 2.11.3).
 
 
 Version 0.3.2
