@@ -11,12 +11,12 @@ import dataclasses
 from itertools import islice
 from pathlib import Path
 import shutil
-import subprocess
 import sys
 from typing import Iterable, Iterator, Optional
 
 from .files import find_duplicate_filenames, read_first_line, write_file
 from .html import render_html_pages
+from .images import generate_images
 from .logging import debug
 from .models import Dimension, Gallery, Image
 
@@ -24,21 +24,6 @@ from .models import Dimension, Gallery, Image
 IMAGE_CAPTION_EXTENSION: str = '.txt'
 
 PATH_STATIC: Path = Path(__file__).parent / 'static'
-
-
-def resize_image(
-    src_filename: Path, dst_filename: Path, max_dimension: Dimension
-) -> None:
-    """Create a resized (and antialiased) version of an image."""
-    dimension_str = f'{max_dimension.width:d}x{max_dimension.height:d}'
-    cmd = [
-        'convert',
-        '-resize',
-        dimension_str,
-        str(src_filename),
-        str(dst_filename),
-    ]
-    subprocess.check_call(cmd)
 
 
 def create_gallery(
@@ -97,12 +82,6 @@ def add_image_captions(gallery: Gallery) -> Gallery:
     return dataclasses.replace(gallery, images=captioned_images)
 
 
-def generate_images(gallery: Gallery) -> None:
-    for image in gallery.images:
-        generate_image(image, gallery)
-        generate_thumbnail(image, gallery)
-
-
 def copy_additional_static_files(destination_path: Path) -> None:
     if not PATH_STATIC.exists():
         debug(
@@ -159,34 +138,6 @@ def create_image(full_filename: Path) -> Image:
         filename=full_filename.name,
         thumbnail_filename=thumbnail_filename,
         page_name=basename,
-    )
-
-
-def generate_image(image: Image, gallery: Gallery) -> None:
-    """Create a (optionally resized) copy of an image."""
-    destination_filename = gallery.destination_path / image.filename
-    if gallery.resize:
-        # Resize image.
-        debug('Resizing image "{}" ...', image.full_filename)
-        resize_image(
-            image.full_filename,
-            destination_filename,
-            gallery.max_image_size,
-        )
-    else:
-        # Copy image.
-        debug('Copying image "{}" ...', image.full_filename)
-        shutil.copy(image.full_filename, destination_filename)
-
-
-def generate_thumbnail(image: Image, gallery: Gallery) -> None:
-    """Create a preview of an image."""
-    debug('Creating thumbnail "{}" ...', image.thumbnail_filename)
-    destination_filename = gallery.destination_path / image.thumbnail_filename
-    resize_image(
-        image.full_filename,
-        destination_filename,
-        gallery.max_thumbnail_size,
     )
 
 
