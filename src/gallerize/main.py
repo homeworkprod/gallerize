@@ -7,11 +7,9 @@ gallerize.main
 """
 
 from __future__ import annotations
-from collections import defaultdict
 import dataclasses
 from itertools import islice
 import os
-from pathlib import Path
 import shutil
 import subprocess
 import sys
@@ -19,6 +17,8 @@ from typing import Any, Iterable, Iterator, Optional, Sequence
 
 from jinja2 import Environment, PackageLoader
 
+from .files import find_duplicate_filenames, read_first_line, write_file
+from .logging import debug
 from .models import Dimension, Gallery, Image
 
 
@@ -33,10 +33,6 @@ TEMPLATE_ENVIRONMENT: Environment = Environment(
     loader=PackageLoader(__package__, 'templates'),
     trim_blocks=False,
 )
-
-
-def debug(message: str, *args: Any) -> None:
-    print(message.format(*args))
 
 
 def resize_image(
@@ -61,11 +57,6 @@ def render_html_to_file(
 
 def render_template(template_filename: str, **context: dict[str, Any]) -> str:
     return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
-
-
-def write_file(filename: str, content: str) -> None:
-    debug('Writing "{}" ...', filename)
-    Path(filename).write_text(content, encoding='utf-8')
 
 
 def create_gallery(
@@ -238,18 +229,7 @@ def load_caption(image: Image) -> Optional[str]:
     caption_filename = os.path.join(
         image.path, image.filename + IMAGE_CAPTION_EXTENSION
     )
-    return _read_first_line(caption_filename)
-
-
-def _read_first_line(filename: str) -> Optional[str]:
-    """Read the first line from the specified file."""
-    try:
-        text = Path(filename).read_text(encoding='utf-8')
-        first_line = text.splitlines()[0]
-        return first_line.strip()
-    except IOError:
-        # File does not exist (OK) or cannot be read (not really OK).
-        return None
+    return read_first_line(caption_filename)
 
 
 def render_html_page(gallery: Gallery, image: Image) -> None:
@@ -275,14 +255,3 @@ def handle_duplicate_filenames(paths: Iterable[str]) -> None:
             print(f'    - {path}')
 
     sys.exit('Clashing target filenames, aborting.')
-
-
-def find_duplicate_filenames(
-    paths: Iterable[str],
-) -> list[tuple[str, list[str]]]:
-    d = defaultdict(list)
-    for path in paths:
-        key = os.path.basename(path).lower()
-        d[key].append(path)
-
-    return [item for item in d.items() if len(item[1]) > 1]
