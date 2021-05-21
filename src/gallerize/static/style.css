@@ -19,7 +19,6 @@ a:hover {
 
 header {
   margin: 2em 0;
-  text-align: left;
 }
 
 header h1,
@@ -35,7 +34,7 @@ header p {
 }
 
 nav {
-  margin: 1em;
+  margin: 1em 0 2em 0;
   opacity: 0.5;
 }
 
@@ -134,8 +133,7 @@ figure a:hover img {
 }
 
 figcaption {
-  margin-top: 0.75em;
-  text-align: left;
+  margin-top: 2em;
 }
 
 footer {
