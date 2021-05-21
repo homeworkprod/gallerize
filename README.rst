@@ -59,6 +59,12 @@ Install the dependencies of this application:
 
   $ pip install -r requirements.txt
 
+Install gallerize itself:
+
+.. code:: sh
+
+  $ pip install -e .
+
 
 Tests
 =====
@@ -84,14 +90,14 @@ directory `images`:
 
 .. code:: sh
 
-  $ ./gallerize.py output/ images/*
+  $ gallerize output/ images/*
 
 See the usage help for more information on specifying a gallery title,
-image captions, and image dimensions:
+image captions, image dimensions, and more:
 
 .. code:: sh
 
-  $ ./gallerize.py --help
+  $ gallerize --help
 
 
 .. _Python: http://www.python.org/
