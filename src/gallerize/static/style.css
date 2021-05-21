@@ -8,14 +8,6 @@ body {
   text-shadow: 0 1px 1px #ffffff;
 }
 
-figure,
-figcaption,
-footer,
-header,
-nav {
-  display: block;
-}
-
 a {
   color: #333333;
   text-decoration: none;
