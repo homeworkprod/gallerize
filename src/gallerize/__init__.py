@@ -6,4 +6,4 @@ gallerize
 :License: MIT, see LICENSE for details.
 """
 
-VERSION = '0.4'
+VERSION = '0.5-dev'
