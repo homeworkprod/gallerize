@@ -63,21 +63,17 @@ Install the dependencies of this application:
 Tests
 =====
 
-
-Run with pytest
----------------
-
-Install pytest_ as test runner:
+Install test dependencies:
 
 .. code:: sh
 
-  $ pip install pytest
+  $ pip install -r requirements-test.txt
 
 Run tests:
 
 .. code:: sh
 
-  $ pytest test_gallerize.py
+  $ pytest
 
 
 Usage
@@ -104,4 +100,3 @@ image captions, and image dimensions:
 .. _Jinja: http://jinja.pocoo.org/
 .. _virtualenv: http://www.virtualenv.org/
 .. _pip: http://www.pip-installer.org/
-.. _pytest: http://pytest.org/
