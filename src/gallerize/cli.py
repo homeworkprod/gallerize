@@ -12,7 +12,7 @@ import sys
 
 from . import VERSION
 from .main import create_gallery, generate_gallery, handle_duplicate_filenames
-from .models import Dimension
+from .models import Config, Dimension
 
 
 ARGS_DEFAULT_MAX_IMAGE_SIZE: str = '1024x1024'
@@ -48,11 +48,12 @@ def parse_args():
         dest='optimize_images',
         action='store_true',
         default=False,
-        help='optimize images to reduce size and remove metadata')
+        help='optimize images to reduce size and remove metadata',
+    )
 
     parser.add_argument(
         '--no-resize',
-        dest='resize',
+        dest='resize_images',
         action='store_false',
         default=True,
         help='do not resize images, just copy them',
@@ -96,16 +97,22 @@ def parse_args():
 def main():
     try:
         args = parse_args()
+
         handle_duplicate_filenames(args.full_image_filenames)
+
         gallery = create_gallery(
             title=args.title,
             destination_path=args.destination_path,
-            resize=args.resize,
             max_image_size=args.max_image_size,
             max_thumbnail_size=args.max_thumbnail_size,
-            optimize_images=args.optimize_images,
             full_image_filenames=args.full_image_filenames,
         )
-        generate_gallery(gallery)
+
+        config = Config(
+            resize_images=args.resize_images,
+            optimize_images=args.optimize_images,
+        )
+
+        generate_gallery(gallery, config)
     except KeyboardInterrupt:
         sys.exit('Ctrl-C pressed, aborting.')

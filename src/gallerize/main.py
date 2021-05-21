@@ -18,7 +18,7 @@ from .files import find_duplicate_filenames, read_first_line, write_file
 from .html import render_html_pages
 from .images import generate_images
 from .logging import debug
-from .models import Dimension, Gallery, Image
+from .models import Config, Dimension, Gallery, Image
 
 
 IMAGE_CAPTION_EXTENSION: str = '.txt'
@@ -29,10 +29,8 @@ PATH_STATIC: Path = Path(__file__).parent / 'static'
 def create_gallery(
     title: str,
     destination_path: Path,
-    resize: bool,
     max_image_size: Dimension,
     max_thumbnail_size: Dimension,
-    optimize_images: bool,
     full_image_filenames: list[Path],
 ) -> Gallery:
     images = [create_image(image) for image in sorted(full_image_filenames)]
@@ -41,10 +39,8 @@ def create_gallery(
     return Gallery(
         title=title,
         destination_path=destination_path,
-        resize=resize,
         max_image_size=max_image_size,
         max_thumbnail_size=max_thumbnail_size,
-        optimize_images=optimize_images,
         images=images,
     )
 
@@ -59,7 +55,7 @@ def link_images(images: list[Image]) -> Iterator[Image]:
         )
 
 
-def generate_gallery(gallery: Gallery) -> None:
+def generate_gallery(gallery: Gallery, config: Config) -> None:
     # Create destination path if it doesn't exist.
     if not gallery.destination_path.exists():
         debug(
@@ -69,7 +65,7 @@ def generate_gallery(gallery: Gallery) -> None:
         gallery.destination_path.mkdir()
 
     gallery = add_image_captions(gallery)
-    generate_images(gallery)
+    generate_images(gallery, config.resize_images, config.optimize_images)
     render_html_pages(gallery)
     copy_additional_static_files(gallery.destination_path)
     debug('Done.')

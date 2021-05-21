@@ -16,17 +16,19 @@ from .logging import debug
 from .models import Dimension, Gallery, Image
 
 
-def generate_images(gallery: Gallery) -> None:
+def generate_images(gallery: Gallery, resize: bool, optimize: bool) -> None:
     """Generate images for the gallery."""
     for image in gallery.images:
-        _generate_image(image, gallery)
-        _generate_thumbnail(image, gallery)
+        _generate_image(image, gallery, resize, optimize)
+        _generate_thumbnail(image, gallery, optimize)
 
 
-def _generate_image(image: Image, gallery: Gallery) -> None:
+def _generate_image(
+    image: Image, gallery: Gallery, resize: bool, optimize: bool
+) -> None:
     """Create an (optionally resized) copy of an image."""
     destination_filename = gallery.destination_path / image.filename
-    if gallery.resize:
+    if resize:
         # Resize image.
         debug('Resizing image "{}" ...', image.full_filename)
         _resize_image(
@@ -39,11 +41,11 @@ def _generate_image(image: Image, gallery: Gallery) -> None:
         debug('Copying image "{}" ...', image.full_filename)
         shutil.copy(image.full_filename, destination_filename)
 
-    if gallery.optimize_images:
+    if optimize:
         _optimize_image(destination_filename)
 
 
-def _generate_thumbnail(image: Image, gallery: Gallery) -> None:
+def _generate_thumbnail(image: Image, gallery: Gallery, optimize: bool) -> None:
     """Create a small preview image for an image."""
     debug('Creating thumbnail "{}" ...', image.thumbnail_filename)
     destination_filename = gallery.destination_path / image.thumbnail_filename
@@ -53,7 +55,7 @@ def _generate_thumbnail(image: Image, gallery: Gallery) -> None:
         gallery.max_thumbnail_size,
     )
 
-    if gallery.optimize_images:
+    if optimize:
         _optimize_image(destination_filename)
 
 

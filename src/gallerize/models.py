@@ -34,8 +34,12 @@ class Image:
 class Gallery:
     title: str
     destination_path: Path
-    resize: bool
     max_image_size: Dimension
     max_thumbnail_size: Dimension
-    optimize_images: bool
     images: list[Image]
+
+
+@dataclass(frozen=True)
+class Config:
+    resize_images: bool
+    optimize_images: bool
