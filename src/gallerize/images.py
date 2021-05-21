@@ -39,8 +39,8 @@ def _generate_image(image: Image, gallery: Gallery) -> None:
         debug('Copying image "{}" ...', image.full_filename)
         shutil.copy(image.full_filename, destination_filename)
 
-        if gallery.optimize_images:
-            _optimize_image(destination_filename)
+    if gallery.optimize_images:
+        _optimize_image(destination_filename)
 
 
 def _generate_thumbnail(image: Image, gallery: Gallery) -> None:
