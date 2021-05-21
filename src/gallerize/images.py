@@ -40,7 +40,7 @@ def _generate_image(image: Image, gallery: Gallery) -> None:
         shutil.copy(image.full_filename, destination_filename)
 
         if gallery.optimize_images:
-            optimize_image(destination_filename)
+            _optimize_image(destination_filename)
 
 
 def _generate_thumbnail(image: Image, gallery: Gallery) -> None:
@@ -54,7 +54,7 @@ def _generate_thumbnail(image: Image, gallery: Gallery) -> None:
     )
 
     if gallery.optimize_images:
-        optimize_image(destination_filename)
+        _optimize_image(destination_filename)
 
 
 def _resize_image(
@@ -72,7 +72,7 @@ def _resize_image(
     subprocess.check_call(cmd)
 
 
-def optimize_image(filename: Path) -> None:
+def _optimize_image(filename: Path) -> None:
     """Optimize image and strip EXIF and other non-important metadata."""
     cmd = ['jpegoptim', '--strip-all', str(filename)]
     subprocess.check_call(cmd)
